@@ -37,7 +37,7 @@ async function validateSignUp() {
     const emailValue = emailInput.value;
     const passwordValue = passwordInput.value;
 
-    let isValid = true; // Flag to track overall validation status
+    let isValid = true;
 
     const isUsernameUnique = await checkUnique('name', usernameValue);
     console.log('isUsernameUnique', isUsernameUnique);
