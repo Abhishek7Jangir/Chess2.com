@@ -44,7 +44,7 @@ async function validateSignUp() {
     console.log('usernameValue', usernameValue);
     if (!isUsernameUnique || usernameValue === '') {
         nameDiv.style.border = '2px solid red';
-        isValid = false; // Mark validation as failed
+        isValid = false; // Mark validation as faile
     } else {
         nameDiv.style.border = '2px solid green';
     }
