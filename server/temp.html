@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Project</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+</head>
+
+<body>
+    <div class="container">
+    <div class="form-box">
+        <h1 class="title" id="title">Sign Up</h1>
+        <div class="underline">'</div>
+        <form action="http://localhost:3000/signup" method="POST">
+            <div class="input-group">
+                <div class="input-field namefield">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="name" placeholder="Username" required>
+                </div>
+                <div class="input-field email-field">
+                    <i class="fa-solid fa-at"></i>
+                    <input type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="input-field password-field">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" name="password" placeholder="Password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character.">
+                </div>
+                <p><span class="text">Password Suggestions</span><a id='clickHere' href=""> Click Here</a></p>
+            </div>
+            <div class="btn-field">
+                <button type="submit" class="signupbtn" onclick="upClick()">Sign up</button>
+                <button type="button" class="disable signinbtn" onclick="inClick()">Sign in</button>
+            </div>
+        </form>
+    </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
