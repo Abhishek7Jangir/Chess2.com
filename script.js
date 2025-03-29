@@ -142,27 +142,69 @@ async function verifyOtp() {
     if (result.verified) {
         // Store the sign-up data into the database
         const usernameValue = nameInput.value;
-        console.log(usernameValue);
+        console.log('usernameValue: ', usernameValue);
         const passwordValue = passwordInput.value; // Ensure this retrieves the correct value
-        console.log(passwordValue);
-        const hashedPassword = await hashPassword(passwordValue);
-        console.log(hashedPassword);
+        console.log('passwordValue: ', passwordValue);
+        // console.log('hashing password');
+        // const hashedPassword = await hashPassword(passwordValue);
+        // console.log('password hashed');
+        // console.log('hashedPassword', hashedPassword);
 
-        await fetch(`http://localhost:3000/signup`, {
+        console.log('sending signup data to server!')
+
+        const response = await fetch(`http://localhost:3000/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name: usernameValue, email: emailValue, password: hashedPassword })
+            body: JSON.stringify({ name: usernameValue, email: emailValue, password: passwordValue })
         });
 
+        console.log('signup data sent!')
+        
+        const result = await response.text();
+        console.log('result from signup route: ', result);
+        alert(result.message); // Show success message
+
         // Navigate to sign-in page or home page
-        window.location.href = 'index.html'; // Adjust the URL as needed
+        // window.location.href = 'index.html'; // Adjust the URL as needed
     } else {
         otpInput.style.border = '2px solid red';
         alert('Invalid OTP. Please try again.');
     }
 }
+
+// async function hashPassword(password) {
+//     console.log('in hashPassword function!')
+//     const response = await fetch('http://localhost:3000/hash-password', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ password })
+//     });
+//     console.log('password hashing done!');
+//     const result = await response.json();
+//     console.log('exiting hashPassword function!');
+//     return result.hashedPassword;
+// }
+
+function togglePasswordVisibility() {
+    const passwordField = document.querySelector('input[name="password"]');
+    const passwordFieldType = passwordField.getAttribute('type');
+    const eyeIcon = document.querySelector('.toggle-password i');
+
+    if (passwordFieldType === 'password') {
+        passwordField.setAttribute('type', 'text');
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.setAttribute('type', 'password');
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
+    }
+}
+
 
 function inClick() {
     if (sib == 0) {
@@ -315,33 +357,6 @@ async function updatePassword() {
     }
 }
 
-async function hashPassword(password) {
-    const response = await fetch('http://localhost:3000/hash-password', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ password })
-    });
-    const result = await response.json();
-    return result.hashedPassword;
-}
-
-function togglePasswordVisibility() {
-    const passwordField = document.querySelector('input[name="password"]');
-    const passwordFieldType = passwordField.getAttribute('type');
-    const eyeIcon = document.querySelector('.toggle-password i');
-
-    if (passwordFieldType === 'password') {
-        passwordField.setAttribute('type', 'text');
-        eyeIcon.classList.remove('fa-eye');
-        eyeIcon.classList.add('fa-eye-slash');
-    } else {
-        passwordField.setAttribute('type', 'password');
-        eyeIcon.classList.remove('fa-eye-slash');
-        eyeIcon.classList.add('fa-eye');
-    }
-}
 
 // Add event listener for the eye icon
 document.querySelector('.toggle-password').addEventListener('click', togglePasswordVisibility);

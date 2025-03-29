@@ -116,16 +116,23 @@ app.get('/verify-otp', async (req, res) => {
 });//
 
 app.post('/signup', async (req, res) => {
+    console.log('Entered into signup route!');
+    console.log('client data: ', req.body);
     const { name, email, password } = req.body;
     if(!isValidPassword(password)) {
         return res.status(400).send('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
     }
     try {
+        console.log('hashing password...');
         const hashedPassword = await bcrypt.hash(password, 10);
+        console.log('hashed password:', hashedPassword);
+        console.log('storing into database...');
+        ////Can Check again if email is already registered or not// maybe someone from front end is doing wrong
         connection.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, hashedPassword], (err) => {
             if (err) throw err;
             res.send('User registered successfully');
         });
+        console.log('User registered successfully');
     } catch (err) {
         console.error('Error while hashing password:', err);
         res.status(500).send('Internal server error');
@@ -164,16 +171,20 @@ app.post('/update-password', async (req, res) => {
     }
 });
 
-app.post('/hash-password', async (req, res) => {
-    const { password } = req.body;
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        res.json({ hashedPassword });
-    } catch (err) {
-        console.error('Error while hashing password:', err);
-        res.status(500).send('Internal server error');
-    }
-});
+// app.post('/hash-password', async (req, res) => {
+//     console.log('Entered into hash-password route!');
+//     console.log('client password: ', req.body);
+//     console.log('hashing password...');
+//     const { password } = req.body;
+//     try {
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         console.log('hashed password:', hashedPassword);
+//         res.json({ hashedPassword });
+//     } catch (err) {
+//         console.error('Error while hashing password:', err);
+//         res.status(500).send('Internal server error');
+//     }
+// });
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
