@@ -14,7 +14,7 @@ const connection = mysql.createConnection({
     user: 'root',
     database: 'backend',
     password: 'abhishek'
-});
+});//
 
 app.use(express.json());
 
@@ -28,7 +28,7 @@ app.get('/check-name', (req, res) => {
         res.json({ unique: results[0].count === 0 });
         console.log('results[0].count:', results[0].count);
     });
-});
+});//
 
 app.get('/check-email', (req, res) => {
     const { value } = req.query;
@@ -36,7 +36,7 @@ app.get('/check-email', (req, res) => {
         if (err) throw err;
         res.json({ unique: results[0].count === 0 });
     });
-});
+});//
 
 function isValidPassword(password) {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -82,23 +82,32 @@ app.get('/send-otp', (req, res) => {
         console.log('Email sent:', info.response);
         res.json({ message: 'OTP sent successfully' });
     });
-});
+});//
 
-function getStoredOtp(email) {
-    const storedOtp = redisClient.get(`otp:${email}`);
-    return storedOtp || null;
+async function getStoredOtp(email) {
+    try {
+        const storedOtp = await redisClient.get(`otp:${email}`);
+        return storedOtp;
+    } catch (err) {
+        console.error('Error retrieving OTP from Redis:', err);
+        return null;
+    }
 }
 
-app.get('/verify-otp', (req, res) => {
+app.get('/verify-otp', async (req, res) => {
     const { email, otp } = req.query;
 
-    // Retrieve the stored OTP from the in-memory store
-    const storedOtp = getStoredOtp(email);
+    try {
+        const storedOtp = await getStoredOtp(email);
 
-    if (storedOtp === otp) {
-        res.json({ verified: true });
-    } else {
-        res.json({ verified: false });
+        if (storedOtp === otp) {
+            res.json({ verified: true });
+        } else {
+            res.json({ verified: false });
+        }
+    } catch (err) {
+        console.error('Error verifying OTP:', err);
+        res.status(500).send('Internal server error');
     }
 });
 

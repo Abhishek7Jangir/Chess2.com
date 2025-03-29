@@ -30,7 +30,7 @@ async function checkUnique(field, value) {
     const response = await fetch(`http://localhost:3000/check-${field}?value=${value}`);
     const result = await response.json();
     return result.unique;
-}
+}//
 
 async function validateSignUp() {
     const usernameValue = nameInput.value;
@@ -59,7 +59,7 @@ async function validateSignUp() {
         emailDiv.style.border = '2px solid green';
     }
 
-    if (!isValidPassword(passwordValue)) {
+    if (!await isValidPassword(passwordValue)) {
         passwordDiv.style.border = '2px solid red';
         isValid = false; // Mark validation as failed
     } else {
@@ -72,20 +72,22 @@ async function validateSignUp() {
         showOtpField(); // Show OTP input field
     }
     console.log('end of isvalidate function!');
-}
+}//
 
-function isValidPassword(password) {
+async function isValidPassword(password) {
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordPattern.test(password);
-}
+}//
 
 
 async function sendOtp(email) {
+    console.log('sending otp');
     const response = await fetch(`http://localhost:3000/send-otp?email=${email}`);
+    console.log('otp sent!')
     const result = await response.json();
     alert(result.message); // Show success message
     startTimer(); // Start the countdown timer
-}
+}//
 
 function showOtpField() {
     const formBox = document.querySelector('.form-box');
@@ -96,12 +98,12 @@ function showOtpField() {
             <i class="fa-solid fa-key"></i>
             <input type="text" name="otp" placeholder="Enter OTP" required>
         </div>
-        <h5>OTP expires in: <span id="timer">05:00</span></h5>
+        <h6>OTP expires in: <span style="color: red;" id="timer">05:00</span></h6>
         <div class="btn-field">
-            <button type="button" class="verifybtn" onclick="verifyOtp()" style="align-items: center;">Verify</button>
+            <button type="button" class="verifybtn" onclick="verifyOtp()" style="align-items: center">Verify</button>
         </div>
     `;
-}
+}//
 
 let timer;
 const countdownTime = 5 * 60; // 5 minutes in seconds
@@ -111,29 +113,31 @@ function startTimer() {
 
     timer = setInterval(() => {
         let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeleft % 60;
-
-        //format time as mm:ss
+        let seconds = timeLeft % 60; // Corrected variable name
+        // Format time as mm:ss
         document.getElementById('timer').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-        if(timeLeft <= 0) {
+        if (timeLeft <= 0) {
             clearInterval(timer);
             document.getElementById('timer').innerText = 'Expired';
             alert('OTP has expired. Please request a new OTP.');
         }
 
-        timeLeft--;
-    })
-}
+        timeLeft--; // Corrected variable name
+    }, 1000); // Added interval time in milliseconds
+}//
 
 async function verifyOtp() {
+    console.log('entered in verifyOtp function!')
     const otpInput = document.querySelector('input[name="otp"]');
     const otpValue = otpInput.value;
     const emailValue = emailInput.value;
 
+    console.log('verifying otp');
     const response = await fetch(`http://localhost:3000/verify-otp?email=${emailValue}&otp=${otpValue}`);
+    console.log('otp verification done!')
     const result = await response.json();
-    console.log("result", result);
+    console.log("otp verification result", result);
 
     if (result.verified) {
         // Store the sign-up data into the database
