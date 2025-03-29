@@ -215,7 +215,8 @@ function inClick() {
         signUpBtn.classList.add("disable");
         signInBtn.classList.remove("disable");
         username.style.maxHeight = '0';
-        bottomText.innerHTML = "Forgot Password";
+        bottomText.innerHTML = "Forgot Password  ";
+        nameDiv.style.border = 'none';
     } else {
         validateSignIn();
     }
@@ -251,12 +252,12 @@ function upClick() {
         signInBtn.classList.add("disable");
         signUpBtn.classList.remove("disable");
         username.style.maxHeight = '60px';
-        bottomText.innerHTML = "Password Suggestions";
+        bottomText.innerHTML = "Password Suggestions  ";
     } else {
         validateSignUp();
         console.log('end of upClick() function!')
     }
-}
+}//
 
 function suggestionForgot() {
     if (sub == 1) {
