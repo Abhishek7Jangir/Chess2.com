@@ -85,6 +85,8 @@ app.get('/send-otp', (req, res) => {
 });//
 
 async function getStoredOtp(email) {
+    console.log('in stored otp function!');
+    console.log('stored otp:', await redisClient.get(`otp:${email}`));
     try {
         const storedOtp = await redisClient.get(`otp:${email}`);
         return storedOtp;
@@ -92,24 +94,26 @@ async function getStoredOtp(email) {
         console.error('Error retrieving OTP from Redis:', err);
         return null;
     }
-}
+}//
 
 app.get('/verify-otp', async (req, res) => {
     const { email, otp } = req.query;
+    console.log('verify-otp:', email, otp);
 
     try {
         const storedOtp = await getStoredOtp(email);
-
+        console.log('Stored OTP:', storedOtp);
         if (storedOtp === otp) {
             res.json({ verified: true });
         } else {
             res.json({ verified: false });
         }
+        console.log('OTP verification result:', storedOtp === otp);
     } catch (err) {
         console.error('Error verifying OTP:', err);
         res.status(500).send('Internal server error');
     }
-});
+});//
 
 app.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;

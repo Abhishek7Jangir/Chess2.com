@@ -85,8 +85,8 @@ async function sendOtp(email) {
     const response = await fetch(`http://localhost:3000/send-otp?email=${email}`);
     console.log('otp sent!')
     const result = await response.json();
-    alert(result.message); // Show success message
     startTimer(); // Start the countdown timer
+    alert(result.message); // Show success message
 }//
 
 function showOtpField() {
