@@ -225,8 +225,21 @@ function inClick() {
 async function validateSignIn() {
     const emailValue = emailInput.value;
     const passwordValue = passwordInput.value;
-    const response = await fetch(`http://localhost:3000/signin?email=${emailValue}&password=${passwordValue}`);
+    console.log('entered in validateSignIn function!');
+    console.log('emailValue: ', emailValue);
+    console.log('passwordValue: ', passwordValue);
+    
+    const response = await fetch(`http://localhost:3000/signin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: emailValue, password: passwordValue})
+    });
+    console.log('signin data sent!')
+    
     const result = await response.json();
+    console.log('response from server: ', result.message);
 
     if (result.message === 'Login Successful') {
         // Navigate to home page or dashboard
@@ -234,11 +247,14 @@ async function validateSignIn() {
     }
     else if (result.message === 'Incorrect password') {
         passwordDiv.style.border = '2px solid red';
+        passwordInput.value = ''; // Clear the password field
+        passwordInput.focus(); // Set focus back to the password field
         alert('Incorrect password. Please try again.');
     }
     else if (result.message === 'User not registered') {
         emailDiv.style.border = '2px solid red';
         alert('User not registered. Please sign up first.');
+        window.location.href = '/';
     }
 }
 
