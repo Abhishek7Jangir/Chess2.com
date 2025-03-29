@@ -161,18 +161,18 @@ async function verifyOtp() {
         });
 
         console.log('signup data sent!')
-        
+
         const result = await response.text();
         console.log('result from signup route: ', result);
-        alert(result.message); // Show success message
+        alert(result); // Show success message
 
         // Navigate to sign-in page or home page
-        // window.location.href = 'index.html'; // Adjust the URL as needed
+        window.location.href = '/'; // Adjust the URL as needed
     } else {
         otpInput.style.border = '2px solid red';
         alert('Invalid OTP. Please try again.');
     }
-}
+}//
 
 // async function hashPassword(password) {
 //     console.log('in hashPassword function!')
@@ -203,7 +203,7 @@ function togglePasswordVisibility() {
         eyeIcon.classList.remove('fa-eye-slash');
         eyeIcon.classList.add('fa-eye');
     }
-}
+}//
 
 
 function inClick() {

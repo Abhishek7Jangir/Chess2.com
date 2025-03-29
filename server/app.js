@@ -137,7 +137,7 @@ app.post('/signup', async (req, res) => {
         console.error('Error while hashing password:', err);
         res.status(500).send('Internal server error');
     }
-});
+});//
 
 app.post('/signin', (req, res) => {
     const { email, password } = req.body;
