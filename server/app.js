@@ -141,13 +141,17 @@ app.post('/signup', async (req, res) => {
 
 app.post('/signin', (req, res) => {
     const { email, password } = req.body;
+    console.log('Entered into signin route!');
+    console.log('client data: ', req.body);
     connection.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
         if (err) throw err;
         if (results.length === 0) {
+            console.log('User not registered!');
             return res.json({ message: 'User not registered' });
         }
         const user = results[0];
         const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log('isPasswordValid:', isPasswordValid);
         if (isPasswordValid) {
             res.json({ message: 'Login Successful', id: user.id });
         }

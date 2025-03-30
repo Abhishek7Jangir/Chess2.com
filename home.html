@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChessMaster</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            background-color: #222;
+            padding: 1rem 0;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+        }
+
+        nav a {
+            color: #bbb;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(to right, #4f46e5, #3b82f6);
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero button {
+            background-color: #1e40af;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .hero button:hover {
+            background-color: #2563eb;
+        }
+
+        /* Recent Games */
+        .recent-games {
+            padding: 2rem 1rem;
+        }
+
+        .recent-games h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .game {
+            background-color: #222;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .game h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game p {
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>ChessMaster</h1>
+            <nav>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Leaderboard</a>
+                <a href="#">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Welcome to ChessMaster</h2>
+            <p>Challenge yourself and become a grandmaster!</p>
+            <button onclick="startGame()">Play Now</button>
+        </div>
+    </section>
+
+    <!-- Recent Games Section -->
+    <section class="recent-games">
+        <div class="container">
+            <h3>Recent Games</h3>
+            <div class="game">
+                <h4>Player A vs Player B</h4>
+                <p>Result: Player A won in 30 moves</p>
+            </div>
+            <div class="game">
+                <h4>Player C vs Player D</h4>
+                <p>Result: Draw</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function startGame() {
+            alert('Starting a new game...');
+            // Redirect to the game page or initialize the game
+            window.location.href = 'game.html'; // Example redirection
+        }
+    </script>
+</body>
+</html>
