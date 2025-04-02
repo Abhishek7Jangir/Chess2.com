@@ -96,8 +96,8 @@ async function getStoredOtp(email) {
     }
 }//
 
-app.get('/verify-otp', async (req, res) => {
-    const { email, otp } = req.query;
+app.post('/verify-otp', async (req, res) => {
+    const { email, otp } = req.body;
     console.log('verify-otp:', email, otp);
 
     try {

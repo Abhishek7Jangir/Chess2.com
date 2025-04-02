@@ -70,6 +70,7 @@ async function validateSignUp() {
     if (isValid) {
         await sendOtp(emailValue); // Send OTP to email
         showOtpField(); // Show OTP input field
+
     }
     console.log('end of isvalidate function!');
 }//
@@ -100,10 +101,24 @@ function showOtpField() {
         </div>
         <h6>OTP expires in: <span style="color: red;" id="timer">05:00</span></h6>
         <div class="btn-field">
-            <button type="button" class="verifybtn" onclick="verifyOtp()" style="align-items: center">Verify</button>
+            <button type="button" class="verifybtn" onclick="verifyOtpField()" style="align-items: center">Verify</button>
         </div>
     `;
 }//
+
+async function verifyOtpField() {
+    const otpVerification = await verifyOtp();
+    console.log('otpVerification: ', otpVerification);
+    if(otpVerification)
+    {
+        if(sub == 1) {
+            await insertDatabase();
+        }
+        else {
+            showNewPasswordField();
+        }
+    }
+}
 
 let timer;
 const countdownTime = 5 * 60; // 5 minutes in seconds
@@ -134,44 +149,50 @@ async function verifyOtp() {
     const emailValue = emailInput.value;
 
     console.log('verifying otp');
-    const response = await fetch(`http://localhost:3000/verify-otp?email=${emailValue}&otp=${otpValue}`);
+    const response = await fetch(`http://localhost:3000/verify-otp`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: emailValue, otp: otpValue })
+    });
     console.log('otp verification done!')
     const result = await response.json();
     console.log("otp verification result", result);
+    return result;
+}
 
-    if (result.verified) {
-        // Store the sign-up data into the database
-        const usernameValue = nameInput.value;
-        console.log('usernameValue: ', usernameValue);
-        const passwordValue = passwordInput.value; // Ensure this retrieves the correct value
-        console.log('passwordValue: ', passwordValue);
-        // console.log('hashing password');
-        // const hashedPassword = await hashPassword(passwordValue);
-        // console.log('password hashed');
-        // console.log('hashedPassword', hashedPassword);
 
-        console.log('sending signup data to server!')
+async function insertDatabase() {
+    // Store the sign-up data into the database
+    const usernameValue = nameInput.value;
+    console.log('usernameValue: ', usernameValue);
+    const passwordValue = passwordInput.value; // Ensure this retrieves the correct value
+    const emailValue = emailInput.value;
+    console.log('passwordValue: ', passwordValue);
+    // console.log('hashing password');
+    // const hashedPassword = await hashPassword(passwordValue);
+    // console.log('password hashed');
+    // console.log('hashedPassword', hashedPassword);
 
-        const response = await fetch(`http://localhost:3000/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: usernameValue, email: emailValue, password: passwordValue })
-        });
+    console.log('sending signup data to server!')
 
-        console.log('signup data sent!')
+    const response = await fetch(`http://localhost:3000/signup`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: usernameValue, email: emailValue, password: passwordValue })
+    });
 
-        const result = await response.text();
-        console.log('result from signup route: ', result);
-        alert(result); // Show success message
+    console.log('signup data sent!')
 
-        // Navigate to sign-in page or home page
-        window.location.href = '/'; // Adjust the URL as needed
-    } else {
-        otpInput.style.border = '2px solid red';
-        alert('Invalid OTP. Please try again.');
-    }
+    const result = await response.text();
+    console.log('result from signup route: ', result);
+    alert(result); // Show success message
+
+    // Navigate to sign-in page or home page
+    window.location.href = '/'; // Adjust the URL as needed
 }//
 
 // async function hashPassword(password) {
@@ -301,8 +322,21 @@ function showForgotPasswordField() {
 
 async function sendForgotPasswordOtp() {
     const emailValue = document.querySelector('input[name="email"]').value;
-    await fetch(`http://localhost:3000/send-otp?email=${emailValue}`);
-    showNewPasswordField();
+    const emailDiv = document.querySelector('.email-field');
+    const isEmailUnique = await checkUnique('email', emailValue);
+    isvalid = true;
+    if (!isEmailUnique || emailValue === '') {
+        emailDiv.style.border = '2px solid red';
+        isvalid = false; // Mark validation as failed
+    } else {
+        emailDiv.style.border = '2px solid green';
+    }
+
+    if (isValid) {
+        await sendOtp(emailValue); // Send OTP to email
+        showOtpField(); // Show OTP input field
+    }
+
 }
 
 function showNewPasswordField() {
