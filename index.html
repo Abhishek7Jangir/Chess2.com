@@ -12,32 +12,36 @@
 
 <body>
     <div class="container">
-    <div class="form-box">
-        <h1 class="title" id="title">Sign Up</h1>
-        <div class="underline"></div>
-        <form>
-            <div class="input-group">
-                <div class="input-field namefield">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" name="name" placeholder="Username" required>
+        <div class="form-box">
+            <h1 class="title" id="title">Sign Up</h1>
+            <div class="underline"></div>
+            <form>
+                <div class="input-group">
+                    <div class="input-field namefield">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" name="name" placeholder="Username" required>
+                    </div>
+                    <div class="input-field email-field">
+                        <i class="fa-solid fa-at"></i>
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-field password-field">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="password" name="password" placeholder="Password"
+                            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                            title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
+                            required>
+                        <span class="toggle-password"><i class="fa fa-eye"></i></span>
+                    </div>
+                    <p><span class="text">Password Suggestions </span><a id='clickHere'
+                            onclick="suggestionForgot()">Click Here</a></p>
                 </div>
-                <div class="input-field email-field">
-                    <i class="fa-solid fa-at"></i>
-                    <input type="email" name="email" placeholder="Email" required>
+                <div class="btn-field">
+                    <button type="button" class="signupbtn" onclick="upClick()">Sign up</button>
+                    <button type="button" class="signinbtn disable" onclick="inClick()">Sign in</button>
                 </div>
-                <div class="input-field password-field">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="password" name="password" placeholder="Password" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character." required>
-                    <span class="toggle-password"><i class="fa fa-eye"></i></span>
-                </div>
-                <p><span class="text">Password Suggestions  </span><a id='clickHere' onclick="suggestionForgot()">Click Here</a></p>
-            </div>
-            <div class="btn-field">
-                <button type="button" class="signupbtn" onclick="upClick()">Sign up</button>
-                <button type="button" class="signinbtn disable" onclick="inClick()">Sign in</button>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>

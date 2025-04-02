@@ -115,3 +115,21 @@ button.disable{
     background: #eaeaea;
     color: #555;
 }
+
+.single-btn-field{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.single-btn-field button{
+    flex-basis: 48%;
+    background: rgb(0, 0, 0);
+    color: white;
+    height: 40px;
+    border-radius: 20px;
+    border:0;
+    outline: 0;
+    cursor: pointer;
+}

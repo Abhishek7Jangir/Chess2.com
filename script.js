@@ -26,6 +26,9 @@ const nameInput = document.querySelector('input[name="name"]');
 const emailInput = document.querySelector('input[name="email"]');
 const passwordInput = document.querySelector('input[name="password"]');
 
+// Add a global variable to store the email value
+let forgotPasswordEmail = '';
+
 async function checkUnique(field, value) {
     const response = await fetch(`http://localhost:3000/check-${field}?value=${value}`);
     const result = await response.json();
@@ -100,18 +103,21 @@ function showOtpField() {
             <input type="text" name="otp" placeholder="Enter OTP" required>
         </div>
         <h6>OTP expires in: <span style="color: red;" id="timer">05:00</span></h6>
-        <div class="btn-field">
+        <div class="single-btn-field">
             <button type="button" class="verifybtn" onclick="verifyOtpField()" style="align-items: center">Verify</button>
         </div>
     `;
 }//
 
 async function verifyOtpField() {
+    console.log('entered in verifyOtpField function!');
+    console.log('calling verifyOtp function!');
+    const emailValue = emailInput.value;
+    console.log('emailValue: ', emailValue);
     const otpVerification = await verifyOtp();
     console.log('otpVerification: ', otpVerification);
-    if(otpVerification)
-    {
-        if(sub == 1) {
+    if (otpVerification) {
+        if (sub == 1) {
             await insertDatabase();
         }
         else {
@@ -143,10 +149,13 @@ function startTimer() {
 }//
 
 async function verifyOtp() {
-    console.log('entered in verifyOtp function!')
+    console.log('entered in verifyOtp function!');
     const otpInput = document.querySelector('input[name="otp"]');
     const otpValue = otpInput.value;
-    const emailValue = emailInput.value;
+
+    // Use the stored email value
+    const emailValue = forgotPasswordEmail;
+    console.log('emailValue: ', emailValue);
 
     console.log('verifying otp');
     const response = await fetch(`http://localhost:3000/verify-otp`, {
@@ -156,7 +165,7 @@ async function verifyOtp() {
         },
         body: JSON.stringify({ email: emailValue, otp: otpValue })
     });
-    console.log('otp verification done!')
+    console.log('otp verification done!');
     const result = await response.json();
     console.log("otp verification result", result);
     return result;
@@ -249,16 +258,16 @@ async function validateSignIn() {
     console.log('entered in validateSignIn function!');
     console.log('emailValue: ', emailValue);
     console.log('passwordValue: ', passwordValue);
-    
+
     const response = await fetch(`http://localhost:3000/signin`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email: emailValue, password: passwordValue})
+        body: JSON.stringify({ email: emailValue, password: passwordValue })
     });
     console.log('signin data sent!')
-    
+
     const result = await response.json();
     console.log('response from server: ', result.message);
 
@@ -314,94 +323,95 @@ function showForgotPasswordField() {
             <i class="fa-solid fa-at"></i>
             <input type="email" name="email" placeholder="Enter your email" required>
         </div>
-        <div class="btn-field">
+        <div class="single-btn-field">
             <button type="button" class="verifybtn" onclick="sendForgotPasswordOtp()">Verify</button>
         </div>
     `;
 }
 
 async function sendForgotPasswordOtp() {
-    const emailValue = document.querySelector('input[name="email"]').value;
+    // Dynamically retrieve the email input field
+    const emailField = document.querySelector('input[name="email"]');
+    const emailValue = emailField ? emailField.value : ''; // Safely retrieve the value
+    console.log('email value for forgot password: ', emailValue);
+
+    if (!emailValue) {
+        alert('Please enter a valid email address.');
+        return;
+    }
+
+    // Store the email value in the global variable
+    forgotPasswordEmail = emailValue;
+
     const emailDiv = document.querySelector('.email-field');
-    const isEmailUnique = await checkUnique('email', emailValue);
-    isvalid = true;
-    if (!isEmailUnique || emailValue === '') {
-        emailDiv.style.border = '2px solid red';
-        isvalid = false; // Mark validation as failed
-    } else {
-        emailDiv.style.border = '2px solid green';
-    }
-
-    if (isValid) {
-        await sendOtp(emailValue); // Send OTP to email
-        showOtpField(); // Show OTP input field
-    }
-
+    await sendOtp(emailValue); // Send OTP to email
+    console.log('coming from sendOtpFunction!');
+    console.log('now calling function to show otp field!');
+    showOtpField(); // Show OTP input field
 }
 
-function showNewPasswordField() {
+async function showNewPasswordField() {
     const formBox = document.querySelector('.form-box');
     formBox.innerHTML = `
-        <h1 class="title">Enter New Password</h1>
+    <div class="form-box">
+        <h1 class="title">Create New Password</h1>
         <div class="underline"></div>
-        <div class="input-field otp-field">
-            <i class="fa-solid fa-key"></i>
-            <input type="text" name="otp" placeholder="Enter OTP" required>
-        </div>
-        <div class="btn-field">
-            <button type="button" class="verifybtn" onclick="verifyForgotPasswordOtp()">Verify</button>
-        </div>
-    `;
-}
-
-async function verifyForgotPasswordOtp() {
-    const otpValue = document.querySelector('input[name="otp"]').value;
-    const emailValue = document.querySelector('input[name="email"]').value;
-
-    const response = await fetch(`http://localhost:3000/verify-otp?email=${emailValue}&otp=${otpValue}`);
-    const result = await response.json();
-
-    if (result.verified) {
-        // Show new password input field
-        const formBox = document.querySelector('.form-box');
-        formBox.innerHTML = `
-            <h1 class="title">Create New Password</h1>
-            <div class="underline"></div>
-            <div class="input-field password-field">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" name="new-password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character." placeholder="New password" required>
-                <div class="toggle-password"><i class="fa-solid fa-eye"></i></div>
+        <form>
+                <div class="input-field password-field">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" name="password" placeholder="New Password"
+                        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                        title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
+                        required>
+                    <span class="toggle-password"><i class="fa fa-eye"></i></span>
+                </div>
+                <div class="input-field password-field">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" name="password" placeholder="Confirm Password"
+                        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                        title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
+                        required>
+                    <span class="toggle-password"><i class="fa fa-eye"></i></span>
+                </div>
+                <p><span class="text">Password Suggestions </span><a id='clickHere'
+                        onclick="suggestionForgot()">Click Here</a></p>
             </div>
-            <div class="input-field confirm-password-field">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}" name="confirm-new-password" placeholder="Comfirm password" required>
-                <div class="toggle-password"><i class="fa-solid fa-eye"></i></div>
+            <div class="single-btn-field">
+                <button type="button" class="updataPassButton" onclick="updatePassword()">Submit</button>
             </div>
-            <div class="btn-field">
-                <button type="button" class="updatebtn" onclick="updatePassword()">Update Password</button>
-            </div>
-        `;
-    } else {
-        alert('Invalid OTP. Please try again.');
-    }
+        </form>`;
 }
 
 async function updatePassword() {
     const newPasswordValue = document.querySelector('input[name="new-password"]').value;
-    const confirmPasswordValue = document.querySelector('input[name="confirm-new-password"]').value;
-    const emailValue = document.querySelector('input[name="email"]').value;
+    console.log('newPasswordValue: ', newPasswordValue);
 
-    if(newPasswordValue === confirmPasswordValue) {
+    const confirmPasswordValue = document.querySelector('input[name="confirm-new-password"]').value;
+
+    console.log('confirm password value: ', confirmPasswordValue);
+    const emailValue = document.querySelector('input[name="email"]').value;
+    console.log('emailValue: ', emailValue);
+
+    if (newPasswordValue === confirmPasswordValue) {
+        const validPass = await isValidPassword(newPasswordValue);
+        console.log('validPass in updatePassword: ', validPass);
+        if (!validPass) {
+            alert('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+            return;
+        }
+
+        console.log('sending new password to server!');
         const response = await fetch(`http://localhost:3000/update-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email: emailValue, password: newPasswordValue})
-    });
+            body: JSON.stringify({ email: emailValue, password: newPasswordValue })
+        });
         const result = await response.json();
+        console.log('result from update-password route: ', result);
         alert(result.message); // Show success message
-        window.location.href = 'index.html'; // Redirect to sign-in page
+        window.location.href = '/'; // Redirect to sign-in page
     }
     else {
         alert('Passwords do not match. Please try again.');
