@@ -133,19 +133,26 @@ function startTimer() {
     let timeLeft = countdownTime;
 
     timer = setInterval(() => {
+        const timerElement = document.getElementById('timer'); // Get the timer element
+        if (!timerElement) {
+            clearInterval(timer); // Stop the timer if the element is not found
+            return;
+        }
+
         let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60; // Corrected variable name
+        let seconds = timeLeft % 60;
+
         // Format time as mm:ss
-        document.getElementById('timer').innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        timerElement.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
         if (timeLeft <= 0) {
             clearInterval(timer);
-            document.getElementById('timer').innerText = 'Expired';
+            timerElement.innerText = 'Expired';
             alert('OTP has expired. Please request a new OTP.');
         }
 
-        timeLeft--; // Corrected variable name
-    }, 1000); // Added interval time in milliseconds
+        timeLeft--;
+    }, 1000);
 }//
 
 async function verifyOtp() {
@@ -179,10 +186,6 @@ async function insertDatabase() {
     const passwordValue = passwordInput.value; // Ensure this retrieves the correct value
     const emailValue = emailInput.value;
     console.log('passwordValue: ', passwordValue);
-    // console.log('hashing password');
-    // const hashedPassword = await hashPassword(passwordValue);
-    // console.log('password hashed');
-    // console.log('hashedPassword', hashedPassword);
 
     console.log('sending signup data to server!')
 
@@ -204,25 +207,11 @@ async function insertDatabase() {
     window.location.href = '/'; // Adjust the URL as needed
 }//
 
-// async function hashPassword(password) {
-//     console.log('in hashPassword function!')
-//     const response = await fetch('http://localhost:3000/hash-password', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ password })
-//     });
-//     console.log('password hashing done!');
-//     const result = await response.json();
-//     console.log('exiting hashPassword function!');
-//     return result.hashedPassword;
-// }
 
-function togglePasswordVisibility() {
-    const passwordField = document.querySelector('input[name="password"]');
+function togglePasswordVisibility(event) {
+    const passwordField = event.target.closest('.input-field').querySelector('input[type="password"], input[type="text"]');
     const passwordFieldType = passwordField.getAttribute('type');
-    const eyeIcon = document.querySelector('.toggle-password i');
+    const eyeIcon = event.target;
 
     if (passwordFieldType === 'password') {
         passwordField.setAttribute('type', 'text');
@@ -353,43 +342,46 @@ async function sendForgotPasswordOtp() {
 async function showNewPasswordField() {
     const formBox = document.querySelector('.form-box');
     formBox.innerHTML = `
-    <div class="form-box">
         <h1 class="title">Create New Password</h1>
         <div class="underline"></div>
         <form>
-                <div class="input-field password-field">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="password" name="password" placeholder="New Password"
-                        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                        title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
-                        required>
-                    <span class="toggle-password"><i class="fa fa-eye"></i></span>
-                </div>
-                <div class="input-field password-field">
-                    <i class="fa-solid fa-key"></i>
-                    <input type="password" name="password" placeholder="Confirm Password"
-                        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
-                        title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
-                        required>
-                    <span class="toggle-password"><i class="fa fa-eye"></i></span>
-                </div>
-                <p><span class="text">Password Suggestions </span><a id='clickHere'
-                        onclick="suggestionForgot()">Click Here</a></p>
+            <div class="input-field password-field">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" name="new-password" placeholder="New Password"
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}"
+                    title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
+                    required>
+                <span class="toggle-password"><i class="fa fa-eye"></i></span>
             </div>
+            <div class="input-field password-field">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" name="confirm-new-password" placeholder="Confirm Password"
+                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}"
+                    title="Password must be 8 or more characters long with at least one uppercase, one lowercase, one number, and one special character."
+                    required>
+                <span class="toggle-password"><i class="fa fa-eye"></i></span>
+            </div>
+            <p><span class="text">Password Suggestions </span><a id='clickHere'
+                    onclick="suggestionForgot()">Click Here</a></p>
             <div class="single-btn-field">
                 <button type="button" class="updataPassButton" onclick="updatePassword()">Submit</button>
             </div>
         </form>`;
-}
 
+    // Reattach the event listener for the toggle-password elements
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', togglePasswordVisibility);
+    });
+}
 async function updatePassword() {
+    console.log('entered in updatePassword function!');
     const newPasswordValue = document.querySelector('input[name="new-password"]').value;
     console.log('newPasswordValue: ', newPasswordValue);
 
     const confirmPasswordValue = document.querySelector('input[name="confirm-new-password"]').value;
 
     console.log('confirm password value: ', confirmPasswordValue);
-    const emailValue = document.querySelector('input[name="email"]').value;
+    const emailValue = forgotPasswordEmail;
     console.log('emailValue: ', emailValue);
 
     if (newPasswordValue === confirmPasswordValue) {
@@ -408,9 +400,9 @@ async function updatePassword() {
             },
             body: JSON.stringify({ email: emailValue, password: newPasswordValue })
         });
-        const result = await response.json();
+        const result = await response.text();
         console.log('result from update-password route: ', result);
-        alert(result.message); // Show success message
+        alert(result); // Show success message
         window.location.href = '/'; // Redirect to sign-in page
     }
     else {

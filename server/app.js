@@ -162,11 +162,13 @@ app.post('/signin', (req, res) => {
 })
 
 app.post('/update-password', async (req, res) => {
+    console.log('Entered into update-password route!');
     const { email, password } = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         connection.query('UPDATE users SET password = ? WHERE email = ?', [hashedPassword, email], (err) => {
             if (err) throw err;
+            console.log('Password updated successfully!');
             res.send('Password updated successfully');
         });
     } catch (err) {
@@ -174,21 +176,6 @@ app.post('/update-password', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
-
-// app.post('/hash-password', async (req, res) => {
-//     console.log('Entered into hash-password route!');
-//     console.log('client password: ', req.body);
-//     console.log('hashing password...');
-//     const { password } = req.body;
-//     try {
-//         const hashedPassword = await bcrypt.hash(password, 10);
-//         console.log('hashed password:', hashedPassword);
-//         res.json({ hashedPassword });
-//     } catch (err) {
-//         console.error('Error while hashing password:', err);
-//         res.status(500).send('Internal server error');
-//     }
-// });
 
 app.listen(3000, () => {
     console.log('Server running on port 3000');
