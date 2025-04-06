@@ -1,0 +1,203 @@
+<div class="profile-container">
+    <div class="profile-photo-section">
+        <img src="/uploads/default-profile.png" alt="Profile Photo" class="profile-photo" id="profilePhoto">
+        <div class="photo-options">
+            <button onclick="viewPhoto()">View</button>
+            <button onclick="changePhoto()">Change</button>
+        </div>
+    </div>
+
+    <!-- Modal for viewing profile photo -->
+    <div id="viewPhotoModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalPhoto">
+    </div>
+
+    <!-- Form for uploading a new profile photo -->
+    <form id="uploadPhotoForm" action="/upload-profile-photo" method="POST" enctype="multipart/form-data" style="display: none;">
+        <input type="file" name="profilePhoto" accept="image/jpeg, image/png" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div class="profile-info">
+        <p><strong>Username:</strong> <span id="username">JohnDoe</span></p>
+        <p><strong>Email:</strong> <span id="email">johndoe@example.com</span></p>
+    </div>
+    <div class="stats">
+        <div class="stat-box">
+            <h3>Total Matches Played</h3>
+            <p id="total-matches">50</p>
+        </div>
+        <div class="stat-box">
+            <h3>Matches Won</h3>
+            <p id="matches-won">30</p>
+        </div>
+        <div class="stat-box">
+            <h3>Matches Lost</h3>
+            <p id="matches-lost">15</p>
+        </div>
+        <div class="stat-box">
+            <h3>Matches Drawn</h3>
+            <p id="matches-drawn">5</p>
+        </div>
+        <div class="stat-box">
+            <h3>Rating</h3>
+            <p id="rating">1200</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-photo-section {
+        margin-bottom: 20px;
+    }
+
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 10px;
+        background-image: url('/images/WhatsApp\ Image\ 2023-10-24\ .jpg');
+        background-size: cover;
+    }
+
+    .photo-options button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #4682b4;
+        color: white;
+        cursor: pointer;
+    }
+
+    .photo-options button:hover {
+        background-color: #5a9bd4;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+    }
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .profile-info p {
+        font-size: 1.2rem;
+        margin: 10px 0;
+        color: #333;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .stat-box {
+        width: 150px;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin: 10px;
+    }
+
+    .stat-box h3 {
+        font-size: 1rem;
+        margin-bottom: 5px;
+        color: #000000;
+    }
+
+    .stat-box p {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0;
+        color: #000000;
+    }
+
+    .stat-box:nth-child(1) {
+        background-color: #948aff; /* Light red */
+    }
+
+    .stat-box:nth-child(2) {
+        background-color: #77ff96; /* Light green */
+    }
+
+    .stat-box:nth-child(3) {
+        background-color: hsl(355, 92%, 74%); /* Light pink */
+    }
+
+    .stat-box:nth-child(4) {
+        background-color: #d1ecf1; /* Light blue */
+    }
+
+    .stat-box:nth-child(5) {
+        background-color: #fff3cd; /* Light yellow */
+    }
+</style>
+
+<script>
+    function viewPhoto() {
+        const modal = document.getElementById('viewPhotoModal');
+        const modalPhoto = document.getElementById('modalPhoto');
+        const profilePhoto = document.getElementById('profilePhoto');
+
+        modal.style.display = 'block';
+        modalPhoto.src = profilePhoto.src;
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('viewPhotoModal');
+        modal.style.display = 'none';
+    }
+
+    function changePhoto() {
+        const uploadForm = document.getElementById('uploadPhotoForm');
+        uploadForm.style.display = 'block';
+    }
+</script>

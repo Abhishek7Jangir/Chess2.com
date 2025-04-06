@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChessMaster Dashboard in views folder
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #ddd;
+            padding: 1rem 0;
+        }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        header h1 {
+            font-size: 1.8rem;
+        }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        nav a {
+            color: #555;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #000;
+        }
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: linear-gradient(to right, #9ecae1, #c6dbef);
+        }
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .hero .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .hero button {
+            background-color: #4682b4;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .hero button:hover {
+            background-color: #5a9bd4;
+        }
+        .about {
+            text-align: center;
+            padding: 2rem 1rem;
+            background-color: #eee;
+        }
+        .about h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .about p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .sidebar {
+            position: fixed;
+            right: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: #333;
+            color: white;
+            padding-top: 60px;
+            transition: right 0.3s;
+        }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
+        .sidebar a:hover {
+            background: #575757;
+        }
+        .sidebar .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #575757;
+        }
+        .menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .menu-btn .profile {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+                position: fixed;
+                right: 10px; /* Position the button on the right side */
+                top: 10px;
+            }
+            .sidebar {
+                right: -250px; /* Ensure sidebar is hidden initially on the right */
+                left: auto; /* Remove left positioning */
+            }
+        }
+        @media (min-width: 769px) {
+            .menu-btn .profile {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .menu-btn .profile-photo {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .menu-btn .username {
+                font-size: 0.9rem;
+                color: #555;
+            }
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            color: #ffcc00;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #575757;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .play-btn {
+            background-color: #1e40af;
+            color: #fff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .play-btn:hover {
+            background-color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>ChessMaster</h1>
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <nav>
+                <a href="#">Profile</a>
+                <a href="#">Leaderboard</a>
+                <a href="#">About</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Logs</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <img src="/images/default-profile.png" alt="Profile Photo" class="profile-photo">
+            <span class="username">JohnDoe</span>
+        </div>
+        <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+        <a href="#">Profile</a>
+        <a href="#">Leaderboard</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Logs</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <section class="hero">
+        <div class="container">
+            <h2>Welcome to ChessMaster</h2>
+            <p>Challenge yourself and become a grandmaster!</p>
+            <div class="buttons">
+                <div class="dropdown">
+                    <button class="play-btn">Play &#9662;</button>
+                    <div class="dropdown-content">
+                        <a href="/multiplayer">Multiplayer Game</a>
+                        <a href="/play-ai">Play Against AI</a>
+                    </div>
+                </div>
+                <button onclick="window.location.href='signin.html'">Game Analysis</button>
+            </div>
+        </div>
+    </section>
+    <section class="about">
+        <div class="container">
+            <h3>About ChessMaster</h3>
+            <p>ChessMaster is the ultimate online chess platform where players can compete, improve, and climb the global rankings.</p>
+            <h1>Welcome to the home page</h1>
+            <p>User ID: <%= id %></p>
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.style.right = "-250px"; // Explicitly set the initial state of the sidebar
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            if (sidebar.style.right === "-250px") {
+                sidebar.style.right = "0";
+            } else {
+                sidebar.style.right = "-250px";
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            const sidebar = document.getElementById('sidebar');
+            const nav = document.querySelector('nav');
+            const menuBtn = document.querySelector('.menu-btn');
+
+            if (window.innerWidth <= 768) {
+                nav.style.display = 'none'; // Hide navigation links
+                menuBtn.style.display = 'block'; // Show menu button
+                sidebar.style.right = '-250px'; // Ensure sidebar is hidden
+            } else {
+                nav.style.display = 'flex'; // Show navigation links
+                menuBtn.style.display = 'none'; // Hide menu button
+                sidebar.style.right = '-250px'; // Ensure sidebar is hidden
+            }
+        });
+
+        // Ensure the correct state is set on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const nav = document.querySelector('nav');
+            const menuBtn = document.querySelector('.menu-btn');
+
+            if (window.innerWidth <= 768) {
+                nav.style.display = 'none'; // Hide navigation links
+                menuBtn.style.display = 'block'; // Show menu button
+                sidebar.style.right = '-250px'; // Ensure sidebar is hidden
+            } else {
+                nav.style.display = 'flex'; // Show navigation links
+                menuBtn.style.display = 'none'; // Hide menu button
+                sidebar.style.right = '-250px'; // Ensure sidebar is hidden
+            }
+        });
+    </script>
+</body>
+</html>
