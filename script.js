@@ -29,6 +29,11 @@ const passwordInput = document.querySelector('input[name="password"]');
 // Add a global variable to store the email value
 let forgotPasswordEmail = '';
 
+function nevigateToSignIN() {
+    window.location.href='SignUp_SignIn.html';
+    inClick();
+}
+
 async function checkUnique(field, value) {
     const response = await fetch(`http://localhost:3000/check-${field}?value=${value}`);
     const result = await response.json();
@@ -403,7 +408,7 @@ async function updatePassword() {
         const result = await response.text();
         console.log('result from update-password route: ', result);
         alert(result); // Show success message
-        window.location.href = '/'; // Redirect to sign-in page
+        window.location.href = '/views/SignUp_SignIn.html'; // Redirect to sign-in page
     }
     else {
         alert('Passwords do not match. Please try again.');
