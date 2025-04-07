@@ -9,26 +9,36 @@ const ejs = require('ejs');
 const session = require('express-session');
 const router = express.Router();
 
-const profileRouter = require('./routes/profile.js');
-app.use('/profile', profileRouter);
-
-const redisClient = redis.createClient();
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
-redisClient.connect();
-
 app.use(session({
     secret: 'chessGameByAbhishek',
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
-}))
+}));
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'backend',
-    password: 'abhishek'
-});//
+// Debug session data for every request
+app.use((req, res, next) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session Data:', req.session);
+    next();
+});
+
+// Debugging middleware to log static file requests
+app.use((req, res, next) => {
+    console.log('Static file request:', req.url);
+    next();
+});
+
+const profileRoutes = require('./routes/profile');
+app.use('/profile', profileRoutes);
+
+const redisClient = redis.createClient();
+redisClient.on('error', (err) => console.error('Redis Client Error', err));
+redisClient.connect();
+
+app.use(express.urlencoded({ extended: true }));
+
+const connection = require('./config/db'); // Import the MySQL connection from db.js
 
 app.use(express.json());
 
@@ -37,6 +47,9 @@ app.use(express.static(path.join(__dirname, '/views')));
 
 // Serve static files from the public directory
 app.use('/public', express.static(path.join(__dirname, 'public')));
+
+// Serve static files from the uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -175,16 +188,14 @@ app.post('/signin', (req, res) => {
         console.log('isPasswordValid:', isPasswordValid);
         if (isPasswordValid) {
             req.session.userId = user.id; // Store user ID in session
+            console.log('Session userId set:', req.session.userId);
             res.json({message: 'Login Successful'}); // Send user ID in the response
-            console.log('Login successful!');
-                // Render the EJS file with user ID
         }
         else {
             res.json({ message: 'Incorrect password' });
         }
-    })
-})
-
+    });
+});
 
 app.get('/home', (req, res) => {
     if (!req.session.userId) {
@@ -232,3 +243,5 @@ app.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 
+
+module.exports = connection;

@@ -1,0 +1,1 @@
+ UPDATE users SET profile_photo = /uploads/user_Id_17.jpg WHERE id = 17;

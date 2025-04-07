@@ -2,6 +2,30 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const connection = require('../config/db'); // Use the MySQL connection from db.js
+
+router.get('/', (req, res) => {
+    console.log('Session ID:', req.sessionID);
+    console.log('Session Data:', req.session);
+    console.log('User ID:', req.session.userId); // Log the user ID from the session
+
+    if (!req.session || !req.session.userId) {
+        return res.redirect('/SignUp_SignIn.html');
+    }
+
+    connection.query('SELECT name, email, profile_photo FROM users WHERE id = ?', [req.session.userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching user data:', err);
+            return res.status(500).send('Failed to load profile.');
+        }
+
+        const user = results[0];
+        console.log('Username:', user?.name, 'Email:', user?.email);
+        const profilePhoto = user?.profile_photo || '/uploads/default-profile.jpg'; // Use default photo if none exists
+        res.render('profile', { profilePhoto, username: user?.name, email: user?.email });
+    });
+});
 
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -9,7 +33,13 @@ const storage = multer.diskStorage({
         cb(null, path.join(__dirname, '../public/uploads'));
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        if (req.session && req.session.userId) {
+            const userId = req.session.userId;
+            const newFileName = `user_Id_${userId}${path.extname(file.originalname)}`;
+            cb(null, newFileName);
+        } else {
+            cb(new Error('User not logged in or session not found'));
+        }
     }
 });
 
@@ -30,19 +60,58 @@ const upload = multer({
 });
 
 // Route to handle profile photo upload
-router.post('/upload-profile-photo', upload.single('profilePhoto'), (req, res) => {
+router.post('/upload-profile-photo', (req, res, next) => {
+    if (!req.session || !req.session.userId) {
+        console.error('User not logged in or session not found');
+        return res.status(401).send('User not logged in');
+    }
+    next();
+}, upload.single('profilePhoto'), (req, res) => {
     if (!req.file) {
-        return res.status(400).send('No file uploaded or invalid file type.');
+        console.error('No file uploaded or invalid file type.');
+        return res.status(400).json({ message: 'No file uploaded or invalid file type.' });
     }
 
-    // Save the file path to the user's profile in the database (mocked here)
-    const filePath = `/uploads/${req.file.filename}`;
-    console.log('Uploaded file path:', filePath);
+    const userId = req.session.userId;
+    const newFileName = `user_Id_${userId}${path.extname(req.file.originalname)}`;
+    const filePath = `/uploads/${newFileName}`;
 
-    // Mock saving to database
-    // Update the user's profile photo path in the database
+    connection.query('SELECT profile_photo FROM users WHERE id = ?', [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching existing profile photo:', err);
+            return res.status(500).json({ message: 'Failed to fetch existing profile photo.' });
+        }
 
-    res.json({ message: 'Profile photo uploaded successfully!', filePath });
-});//
+        const existingPhoto = results[0]?.profile_photo;
+        const uploadDir = path.join(__dirname, '../public/uploads');
+        const newPhotoPath = path.join(uploadDir, newFileName);
+
+        if (existingPhoto && existingPhoto !== '/uploads/default-profile.png') {
+            fs.rename(req.file.path, newPhotoPath, (renameErr) => {
+                if (renameErr) {
+                    console.error('Error replacing existing profile photo:', renameErr);
+                    return res.status(500).json({ message: 'Failed to replace profile photo.' });
+                }
+                res.json({ message: 'Profile photo replaced successfully!' });
+            });
+        } else {
+            fs.rename(req.file.path, newPhotoPath, (renameErr) => {
+                if (renameErr) {
+                    console.error('Error saving new profile photo:', renameErr);
+                    return res.status(500).json({ message: 'Failed to save profile photo.' });
+                }
+
+                connection.query('UPDATE users SET profile_photo = ? WHERE id = ?', [filePath, userId], (updateErr) => {
+                    if (updateErr) {
+                        console.error('Error updating profile photo in database:', updateErr);
+                        return res.status(500).json({ message: 'Failed to update profile photo in database.' });
+                    }
+
+                    res.json({ message: 'Profile photo uploaded successfully!' });
+                });
+            });
+        }
+    });
+});
 
 module.exports = router;
