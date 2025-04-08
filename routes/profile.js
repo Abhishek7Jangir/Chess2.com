@@ -3,7 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const connection = require('../config/db'); // Use the MySQL connection from db.js
+const connection = require('../config/db'); // Use the MySQL connection from db.js //
 
 router.get('/', (req, res) => {
     console.log('Session ID:', req.sessionID);
