@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
+const multer = require('multer'); // multer is used for handling file uploads
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs'); // fs is used for file system operations
 const connection = require('../config/db'); // Use the MySQL connection from db.js
 
 router.get('/', (req, res) => {
