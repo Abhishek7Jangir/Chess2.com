@@ -32,6 +32,9 @@ app.use((req, res, next) => {
 const profileRoutes = require('./routes/profile');
 app.use('/profile', profileRoutes);
 
+const multiPlayer = require('./routes/multiPlayer');
+app.use('/multiplayer', multiPlayer);
+
 const redisClient = redis.createClient();
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect();
@@ -207,7 +210,19 @@ app.get('/home', (req, res) => {
      res.setHeader('Pragma', 'no-cache');
      res.setHeader('Expires', '0');
 
-    res.render('home', { id: req.session.userId }); // ✅ safely render using session
+    // res.render('home', { id: req.session.userId }); // ✅ safely render using session
+
+    connection.query('SELECT name, email, profile_photo FROM users WHERE id = ?', [req.session.userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching user data:', err);
+            return res.status(500).send('Failed to load profile.');
+        }
+
+        const user = results[0];
+        console.log('Username:', user?.name, 'Email:', user?.email);
+        const profilePhoto = user?.profile_photo || '/uploads/default-profile.jpg'; // Use default photo if none exists
+        res.render('home', { id: req.session.userId, profilePhoto, username: user?.name, email: user?.email });
+    });
 });
 
 app.get('/logout', (req, res) => {
