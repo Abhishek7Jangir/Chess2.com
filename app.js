@@ -9,6 +9,9 @@ const ejs = require('ejs');
 const session = require('express-session');
 const router = express.Router();
 
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+
 app.use(session({
     secret: 'chessGameByAbhishek',
     resave: false,
@@ -32,8 +35,10 @@ app.use((req, res, next) => {
 const profileRoutes = require('./routes/profile');
 app.use('/profile', profileRoutes);
 
-const multiPlayer = require('./routes/multiPlayer');
+const { router: multiPlayer, setupSocket } = require('./routes/multiPlayer');
 app.use('/multiplayer', multiPlayer);
+
+setupSocket(io);
 
 const redisClient = redis.createClient();
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
@@ -254,9 +259,9 @@ app.post('/update-password', async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
+server.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 
 
-module.exports = connection;
+module.exports = {connection, io}; // Export the connection and io for use in other modules
