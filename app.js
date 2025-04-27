@@ -38,6 +38,12 @@ app.use('/profile', profileRoutes);
 const { router: multiPlayer, setupSocket } = require('./routes/multiPlayer');
 app.use('/multiplayer', multiPlayer);
 
+const { router: againstAiRouter, setupAgainstAi } = require('./routes/againstAi');
+app.use('/againstAi', againstAiRouter);
+
+setupAgainstAi(io);
+
+
 setupSocket(io);
 
 const redisClient = redis.createClient();

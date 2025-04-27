@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= title %>
+    </title>
+
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, minmax(0, 1fr));
+            grid-template-rows: repeat(8, minmax(0, 1fr));
+            width: 400px;
+            height: 400px;
+            transform: rotate(0deg);
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .square.light {
+            background-color: #f0d9b5;
+        }
+
+        .square.dark {
+            background-color: #b58863;
+        }
+
+        .piece {
+            font-family: 'Arial', 'Segoe UI Symbol', 'Noto Sans Symbols2', sans-serif;
+            font-size: 36px;
+            cursor: pointer;
+        }
+
+        .flipped {
+            transform: rotate(180deg);
+        }
+
+        .flipped .piece {
+            transform: rotate(180deg);
+        }
+
+        .white-piece {
+            color: white;
+        }
+
+        .black-piece {
+            color: black !important; /* Ensure the color is explicitly set to black */
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+    <div class="flex flex-col items-center mb-4">
+        <label for="difficulty" class="text-white mb-2 text-xl">Select Difficulty:</label>
+        <select id="difficulty" class="text-black text-lg p-2 rounded">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <button id="startGame" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Start Game
+        </button>
+    </div>
+
+    <div id="chessArea" class="hidden flex flex-col items-center">
+        <div class="chessboard bg-zinc-700" id="chessboard"></div> <!-- Added id for dynamic flipping -->
+    </div>
+
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="/public/js/scriptAi.js"></script>
+
+</body>
+
+</html>
