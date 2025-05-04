@@ -1,4 +1,7 @@
 const socket = io();
+socket.on('connect', () => {
+    socket.emit('registerUser', { userId: USER_ID_FROM_SESSION });
+});
 const chess = new Chess();
 
 const boardElement = document.querySelector(".chessboard");
@@ -142,4 +145,3 @@ function showResultPopup(message, color) {
         location.reload(); // reload page after a few seconds
     }, 3000);
 }
-

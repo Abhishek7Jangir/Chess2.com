@@ -7,10 +7,57 @@
         <%= title %>
     </title>
 
-    <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        /* Background */
+        body {
+            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        /* Main Container */
+        .game-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Player Info (Name + Timer + Captures) */
+        .player-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            font-weight: bold;
+            padding: 5px 20px;
+        }
+
+        .captured-pieces {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+        }
+
+        .timer {
+            background: #222;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        /* Chessboard (✅ Your original colors) */
         .chessboard {
             display: grid;
             grid-template-columns: repeat(8, minmax(0, 1fr));
@@ -18,6 +65,9 @@
             width: 400px;
             height: 400px;
             transform: rotate(0deg);
+            /* border: 5px solid #333; */
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .square {
@@ -27,25 +77,20 @@
         }
 
         .square.light {
-            background-color: #f0d9b5;
+            background-color: #f0d9b5af;
+            /* ✅ Correct Cream color */
         }
 
         .square.dark {
-            background-color: #b58863;
+            background-color: #b58863cd;
+            /* ✅ Correct Brown-Green color */
         }
 
+        /* Piece Styling */
         .piece {
-            font-family: 'Arial', 'Segoe UI Symbol', 'Noto Sans Symbols2', sans-serif;
+            font-family: 'Segoe UI Symbol', 'Arial', sans-serif;
             font-size: 36px;
-            cursor: pointer;
-        }
-
-        .flipped {
-            transform: rotate(180deg);
-        }
-
-        .flipped .piece {
-            transform: rotate(180deg);
+            cursor: grab;
         }
 
         .white-piece {
@@ -53,33 +98,72 @@
         }
 
         .black-piece {
-            color: black !important; /* Ensure the color is explicitly set to black */
+            color: black;
+        }
+
+        select,
+        button {
+            font-size: 18px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 15vh;
+        }
+
+        button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 
-<body class="bg-gray-900 flex items-center justify-center h-screen">
-    <div class="flex flex-col items-center mb-4">
-        <label for="difficulty" class="text-white mb-2 text-xl">Select Difficulty:</label>
-        <select id="difficulty" class="text-black text-lg p-2 rounded">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-        </select>
-        <button id="startGame" class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Start Game
-        </button>
+<body>
+    <div class="game-container">
+        <!-- Start Menu -->
+        <div id="startArea" class="flex flex-col items-center gap-4">
+            <label for="difficulty" class="text-white text-xl">Select Difficulty:</label>
+            <select id="difficulty" class="text-black p-2 rounded">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <button id="startGame">Start Game</button>
+        </div>
+
+        <!-- Chess Area -->
+        <div id="chessArea" class="hidden flex flex-col items-center gap-2">
+            <!-- Top Player (Opponent AI) -->
+            <div class="player-info">
+                  <div id="opponentName">Stockfish</div>
+                <div id="capturedByPlayer" class="captured-pieces"></div>
+                <div id="opponentTimer" class="timer">10:00</div>
+            </div>
+
+            <!-- Chessboard -->
+            <div class="chessboard" id="chessboard"></div>
+
+            <!-- Bottom Player (You) -->
+            <div class="player-info">
+                <div id="playerName">You</div>
+                <div id="capturedByOpponent" class="captured-pieces"></div>
+                <div id="playerTimer" class="timer">10:00</div>
+            </div>
+        </div>
     </div>
 
-    <div id="chessArea" class="hidden flex flex-col items-center">
-        <div class="chessboard bg-zinc-700" id="chessboard"></div> <!-- Added id for dynamic flipping -->
-    </div>
-
-
+    <!-- JavaScript -->
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
     <script src="/public/js/scriptAi.js"></script>
-
+    <script>
+        const USER_ID_FROM_SESSION = <%= userId %>;
+    </script>
 </body>
 
 </html>

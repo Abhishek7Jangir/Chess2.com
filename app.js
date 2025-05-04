@@ -91,7 +91,7 @@ function isValidPassword(password) {
     return passwordPattern.test(password);
 }
 
-// const otpStore = {}; // In-memory store for OTPs
+  
 
 app.get('/send-otp', (req, res) => {
     const { email } = req.query;

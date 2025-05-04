@@ -14,16 +14,16 @@ router.get('/', (req, res) => {
         return res.redirect('/SignUp_SignIn.html');
     }
 
-    connection.query('SELECT name, email, profile_photo FROM users WHERE id = ?', [req.session.userId], (err, results) => {
+    connection.query('SELECT name, email, profile_photo, rating FROM users WHERE id = ?', [req.session.userId], (err, results) => {
         if (err) {
             console.error('Error fetching user data:', err);
             return res.status(500).send('Failed to load profile.');
         }
 
         const user = results[0];
-        console.log('Username:', user?.name, 'Email:', user?.email);
+        console.log('Username:', user?.name, 'Email:', user?.email, 'Rating:', user?.rating);
         const profilePhoto = user?.profile_photo || '/uploads/default-profile.jpg'; // Use default photo if none exists
-        res.render('profile', { profilePhoto, username: user?.name, email: user?.email });
+        res.render('profile', { profilePhoto, username: user?.name, email: user?.email, rating: user?.rating || 300 });
     });
 });
 

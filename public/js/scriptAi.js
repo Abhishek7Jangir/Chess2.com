@@ -1,4 +1,8 @@
 const socket = io();
+socket.on('connect', () => {
+    socket.emit('registerUser', { userId: USER_ID_FROM_SESSION });
+});
+
 let chess;
 let boardElement;
 let draggedPiece = null;
@@ -8,16 +12,25 @@ let playerRole = 'w';
 
 document.getElementById('startGame').addEventListener('click', function () {
     const selectedDifficulty = document.getElementById('difficulty').value;
+
     socket.emit('startGame', selectedDifficulty);
 
+    document.getElementById('startArea').classList.add('hidden');
     document.getElementById('chessArea').classList.remove('hidden');
-    document.getElementById('startGame').parentElement.style.display = 'none';
+
+    // Update Opponent Name dynamically
+    const opponentNameElement = document.getElementById('opponentName');
+    opponentNameElement.innerHTML = `Stockfish<br>Level: ${capitalizeFirstLetter(selectedDifficulty)}`;
 
     chess = new Chess();
-
     boardElement = document.querySelector(".chessboard");
     renderBoard();
 });
+
+// Add helper function:
+function capitalizeFirstLetter(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
 
 const renderBoard = () => {
     if (!chess) return;

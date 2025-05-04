@@ -2,12 +2,33 @@ const { Chess } = require("chess.js");
 const express = require('express');
 const router = express.Router();
 
+const connection = require('../config/db');
+
 let playerQueue = [];
 let gameRooms = {}; // ✅ Correct variable
 
 function setupSocket(io) {
     io.on("connection", (socket) => {
         console.log('Player connected:', socket.id);
+
+        socket.on('registerUser', ({ userId }) => {
+            socket.userId = userId;
+            console.log('Socket registered with userId:', userId);
+        });
+
+        function calculateRatingChange(rating, isWin) {
+            let change = 0;
+
+            if (rating <= 1000) {
+                change = 20;
+            } else if (rating <= 1500) {
+                change = 15;
+            } else {
+                change = 10;
+            }
+
+            return isWin ? change : -change; // Positive for win, negative for loss
+        }
 
         if (playerQueue.length > 0) {
             let waitingPlayer = playerQueue.shift();
@@ -61,20 +82,58 @@ function setupSocket(io) {
                     io.to(roomId).emit('move', move);
                     //handling gameover
                     if (chess.isGameOver()) {
-                        const winnerColor = chess.turn() === 'w' ? 'b' : 'w'; // If it's white's turn but no moves, black won (opposite)
+                        const winnerColor = chess.turn() === 'w' ? 'b' : 'w'; // Game is over, so it's next player's turn, but that player can't move.
 
                         const { white, black } = game.players;
+                        const winnerSocketId = winnerColor === 'w' ? white : black;
+                        const loserSocketId = winnerColor === 'w' ? black : white;
 
-                        if (winnerColor === 'w') {
-                            io.to(white).emit('gameOver', { result: 'win' });
-                            io.to(black).emit('gameOver', { result: 'lose' });
-                        } else {
-                            io.to(white).emit('gameOver', { result: 'lose' });
-                            io.to(black).emit('gameOver', { result: 'win' });
-                        }
+                        const winnerUserId = io.sockets.sockets.get(winnerSocketId)?.userId;
+                        const loserUserId = io.sockets.sockets.get(loserSocketId)?.userId;
 
-                        delete gameRooms[roomId]; // Clean up room after game ends
+                        if (!winnerUserId || !loserUserId) return;
+
+                        // Get ratings from DB
+                        connection.query(
+                            'SELECT id, rating FROM users WHERE id IN (?, ?)',
+                            [winnerUserId, loserUserId],
+                            (err, results) => {
+                                if (err) return console.error('Rating fetch error:', err);
+                                if (results.length !== 2) return;
+
+                                const winner = results.find(r => r.id === winnerUserId);
+                                const loser = results.find(r => r.id === loserUserId);
+
+                                const winnerRatingChange = calculateRatingChange(winner.rating, true);
+                                const loserRatingChange = calculateRatingChange(loser.rating, false);
+
+                                // Update ratings
+                                connection.query(
+                                    'UPDATE users SET rating = rating + ? WHERE id = ?',
+                                    [winnerRatingChange, winnerUserId],
+                                    (err) => {
+                                        if (err) console.error('Error updating winner rating:', err);
+                                        else console.log('Winner rating updated');
+                                    }
+                                );
+
+                                connection.query(
+                                    'UPDATE users SET rating = rating + ? WHERE id = ?',
+                                    [loserRatingChange, loserUserId],
+                                    (err) => {
+                                        if (err) console.error('Error updating loser rating:', err);
+                                        else console.log('Loser rating updated');
+                                    }
+                                );
+                            }
+                        );
+
+                        io.to(winnerSocketId).emit('gameOver', { result: 'win' });
+                        io.to(loserSocketId).emit('gameOver', { result: 'lose' });
+
+                        delete gameRooms[roomId];
                     }
+
                     //handled gameover
                     io.to(roomId).emit('boardState', chess.fen());
                 } else {
@@ -91,7 +150,10 @@ router.get('/', (req, res) => {
     if (!req.session || !req.session.userId) {
         return res.redirect('/home');
     }
-    res.render('multiplayer', { title: 'Play Chess Multiplayer' });
+    res.render('multiplayer', {
+        title: 'Play Chess Multiplayer',
+        userId: req.session.userId
+    });
 });
 
 module.exports = { router, setupSocket };
