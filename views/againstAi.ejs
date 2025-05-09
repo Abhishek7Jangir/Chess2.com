@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         <%= title %>
     </title>
@@ -62,10 +63,9 @@
             display: grid;
             grid-template-columns: repeat(8, minmax(0, 1fr));
             grid-template-rows: repeat(8, minmax(0, 1fr));
-            width: 400px;
-            height: 400px;
+            width: 75vh;
+            height: 75vh;
             transform: rotate(0deg);
-            /* border: 5px solid #333; */
             border-radius: 10px;
             overflow: hidden;
         }
@@ -78,19 +78,18 @@
 
         .square.light {
             background-color: #f0d9b5af;
-            /* ✅ Correct Cream color */
         }
 
         .square.dark {
             background-color: #b58863cd;
-            /* ✅ Correct Brown-Green color */
         }
 
         /* Piece Styling */
         .piece {
             font-family: 'Segoe UI Symbol', 'Arial', sans-serif;
-            font-size: 36px;
+            font-size: 6vh;
             cursor: grab;
+            background: none;
         }
 
         .white-piece {
@@ -120,6 +119,38 @@
         button:hover {
             background-color: #45a049;
         }
+
+        /* 📱 Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .game-container {
+                width: 95vw;
+                padding: 16px;
+            }
+
+            .chessboard {
+                width: 90vw;
+                height: 90vw;
+            }
+
+            .piece {
+                font-size: 8vw;
+            }
+
+            .captured-pieces {
+                font-size: 1.5rem;
+            }
+
+            .player-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
     </style>
 </head>
 
@@ -140,7 +171,7 @@
         <div id="chessArea" class="hidden flex flex-col items-center gap-2">
             <!-- Top Player (Opponent AI) -->
             <div class="player-info">
-                  <div id="opponentName">Stockfish</div>
+                <div id="opponentName">Stockfish</div>
                 <div id="capturedByPlayer" class="captured-pieces"></div>
                 <div id="opponentTimer" class="timer">10:00</div>
             </div>

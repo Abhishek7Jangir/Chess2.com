@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mysql = require('mysql2');
 const express = require('express');
 const bcrypt = require('bcrypt');
@@ -13,7 +14,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 app.use(session({
-    secret: 'chessGameByAbhishek',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set to true if using HTTPS
@@ -110,8 +111,8 @@ app.get('/send-otp', (req, res) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'abhijangir07aj@gmail.com',
-            pass: 'fucx fbob vcdp aesr' // Use App Password here
+            user: process.env.USER_EMAIL,
+            pass: process.env.APP_PASSWORD // Use App Password here
         }
     });
 
