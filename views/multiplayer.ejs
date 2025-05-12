@@ -1,31 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+        body {
+            background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        /* Main Container */
+        .game-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Player Info (Name + Timer + Captures) */
+        .player-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            font-weight: bold;
+            padding: 5px 20px;
+        }
+
+        .captured-pieces {
+            display: flex;
+            gap: 5px;
+            font-size: 24px;
+        }
+
+        .timer {
+            background: #222;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        /* Chessboard (✅ Your original colors) */
         .chessboard {
             display: grid;
             grid-template-columns: repeat(8, minmax(0, 1fr));
             grid-template-rows: repeat(8, minmax(0, 1fr));
-            width: 400px;
-            height: 400px;
+            width: 75vh;
+            height: 75vh;
             transform: rotate(0deg);
-        }
-
-        .piece.white {
-            color: white;
-            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
-        }
-
-        .piece.black {
-            color: black;
-        }
-
-        .flipped {
-            transform: rotate(180deg);
+            border-radius: 10px;
         }
 
         .square {
@@ -42,6 +78,11 @@
             background-color: #b58863;
         }
 
+        .piece.white {
+            color: white;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
+        }
+
         .piece {
             font-size: 36px;
             cursor: pointer;
@@ -51,8 +92,43 @@
             cursor: grab;
         }
 
+        .piece.black {
+            color: black;
+        }
+
+        /* 📱 Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .game-container {
+                width: 95vw;
+                padding: 16px;
+            }
+
+            .chessboard {
+                width: 90vw;
+                height: 90vw;
+            }
+
+            .piece {
+                font-size: 8vw;
+            }
+
+            .captured-pieces {
+                font-size: 1.5rem;
+            }
+
+            .player-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
         .dragging {
             opacity: 0.5;
+        }
+
+        .flipped {
+            transform: rotate(180deg);
         }
 
         /* Rotate pieces for black player */
@@ -61,18 +137,39 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="w-full h-screen flex items-center justify-center bg-zinc-900">
+    <div id="chessArea" class="game-container flex flex-col items-center gap-2">
+        <!-- Top Player (Opponent AI) -->
+        <div class="player-info">
+            <div id="opponentName">Stockfish</div>
+            <div id="capturedByPlayer" class="captured-pieces"></div>
+            <div id="opponentTimer" class="timer">10:00</div>
+        </div>
+
+        <!-- Chessboard -->
         <div class="chessboard w-96 h-96 bg-red-400"></div>
+
+        <!-- Bottom Player (You) -->
+        <div class="player-info">
+            <div id="playerName">You</div>
+            <div id="capturedByOpponent" class="captured-pieces"></div>
+            <div id="playerTimer" class="timer">10:00</div>
+        </div>
     </div>
 
-    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js" integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+        integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"
+        integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/public/js/chessgame.js"></script>
     <script>
         const USER_ID_FROM_SESSION = <%= userId %>;
     </script>
 </body>
+
 </html>
 
 
