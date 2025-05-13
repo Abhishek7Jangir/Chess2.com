@@ -1,295 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chess Tutorials | ChessMaster</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #333;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chess Tutorials | ChessMaster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    header {
-      background-color: #ddd;
-      padding: 1rem 0;
-    }
+        header {
+            background-color: #ddd;
+            padding: 1rem 0;
+        }
 
-    header .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-    header h1 {
-      font-size: 1.8rem;
-      color: #000000;
-    }
+        header h1 {
+            font-size: 1.8rem;
+            color: #000000;
+        }
 
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
-    }
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
 
-    nav a {
-      color: #555;
-      text-decoration: none;
-      font-size: 1rem;
-      transition: color 0.3s;
-    }
+        nav a {
+            color: #555;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
 
-    nav a:hover {
-      color: #000;
-    }
+        nav a:hover {
+            color: #000;
+        }
 
-    .menu-btn {
-      display: none;
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      color: #333;
-      cursor: pointer;
-      padding: 10px;
-    }
+        .menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+        }
 
-    .sidebar {
-      position: fixed;
-      right: -250px;
-      top: 0;
-      width: 250px;
-      height: 100%;
-      background: #333;
-      color: white;
-      padding-top: 60px;
-      transition: right 0.3s;
-      z-index: 1000;
-    }
+        .sidebar {
+            position: fixed;
+            right: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background: #333;
+            color: white;
+            padding-top: 60px;
+            transition: right 0.3s;
+            z-index: 1000;
+        }
 
-    .sidebar a {
-      display: block;
-      color: white;
-      padding: 10px;
-      text-decoration: none;
-      text-align: center;
-    }
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            text-align: center;
+        }
 
-    .sidebar a:hover {
-      background: #575757;
-    }
+        .sidebar a:hover {
+            background: #575757;
+        }
 
-    .sidebar .profile {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #575757;
-      justify-content: center;
-    }
+        .sidebar .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #575757;
+            justify-content: center;
+        }
 
-    .profile-photo {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      object-fit: cover;
-      background-image: url('/images/WhatsApp\ Image\ 2023-10-24\ .jpg');
-      background-size: cover;
-    }
+        .profile-photo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-image: url('/images/WhatsApp\ Image\ 2023-10-24\ .jpg');
+            background-size: cover;
+        }
 
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
 
-    .close-btn:hover {
-      color: #ffcc00;
-    }
+        .close-btn:hover {
+            color: #ffcc00;
+        }
 
-    @media (max-width: 768px) {
-      .menu-btn {
-        display: block;
-        position: fixed;
-        right: 10px;
-        top: 10px;
-      }
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+                position: fixed;
+                right: 10px;
+                top: 10px;
+            }
 
-      nav {
-        display: none;
-      }
-    }
+            nav {
+                display: none;
+            }
+        }
 
-    .hero {
-      background: linear-gradient(to right, #9ecae1, #c6dbef);
-      padding: 3rem 1rem;
-      text-align: center;
-    }
+        .hero {
+            background: linear-gradient(to right, #9ecae1, #c6dbef);
+            padding: 3rem 1rem;
+            text-align: center;
+        }
 
-    .hero h2 {
-      font-size: 2.2rem;
-      color: #000000;
-      margin-bottom: 0.5rem;
-    }
+        .hero h2 {
+            font-size: 2.2rem;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
 
-    .hero p {
-      font-size: 1.1rem;
-      color: #444;
-    }
+        .hero p {
+            font-size: 1.1rem;
+            color: #444;
+        }
 
-    .tutorials {
-      background-color: #fff;
-      padding: 3rem 1rem;
-    }
+        .tutorials {
+            background-color: #fff;
+            padding: 3rem 1rem;
+        }
 
-    .tutorials h3 {
-      text-align: center;
-      color: #1e83af;
-      margin-bottom: 2rem;
-    }
+        .tutorials h3 {
+            text-align: center;
+            color: #1e83af;
+            margin-bottom: 2rem;
+        }
 
-    .tutorial-card {
-      background: #f0f4f8;
-      padding: 1.5rem;
-      border-radius: 10px;
-      margin: 1rem auto;
-      max-width: 800px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
+        .tutorial-card {
+            background: #f0f4f8;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem auto;
+            max-width: 800px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    .tutorial-card h4 {
-      color: #333;
-      margin-bottom: 0.5rem;
-    }
+        .tutorial-card h4 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
 
-    .tutorial-card p {
-      color: #555;
-      line-height: 1.6;
-    }
+        .tutorial-card p {
+            color: #555;
+            line-height: 1.6;
+        }
 
-    .tutorial-card a {
-      display: inline-block;
-      margin-top: 0.5rem;
-      color: #1e40af;
-      text-decoration: underline;
-    }
+        .tutorial-card a {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: #1e40af;
+            text-decoration: underline;
+        }
 
-    .tutorial-card a:hover {
-      color: #2563eb;
-    }
-  </style>
+        .tutorial-card a:hover {
+            color: #2563eb;
+        }
+    </style>
 </head>
+
 <body>
-  <header>
-    <div class="container">
-      <h1>ChessMaster</h1>
-      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-      <nav>
+    <header>
+        <div class="container">
+            <h1>ChessMaster</h1>
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+            <nav>
+                <a href="/home">Home</a>
+                <a href="/profile">Profile</a>
+                <a href="/leaderboard">Leaderboard</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
+                <a href="/myLogs">Logs</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <div class="profile">
+            <img id="profilePhoto" src="<%= profilePhoto %>" alt="Profile" class="profile-photo"
+                onerror="this.src='/uploads/default-profile.jpg';">
+            <span class="username">
+                <%= username %>
+            </span>
+        </div>
+        <button class="close-btn" onclick="toggleSidebar()">&times;</button>
+        <a href="/home">Home</a>
         <a href="/profile">Profile</a>
         <a href="/leaderboard">Leaderboard</a>
         <a href="/about">About</a>
         <a href="/contact">Contact</a>
         <a href="/myLogs">Logs</a>
-        <a href="/tutorials">Tutorials</a>
         <a href="/logout">Logout</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="sidebar" id="sidebar">
-    <div class="profile">
-      <img id="profilePhoto" src="<%= profilePhoto %>" alt="Profile" class="profile-photo" onerror="this.src='/uploads/default-profile.jpg';">
-      <span class="username"><%= username %></span>
-    </div>
-    <button class="close-btn" onclick="toggleSidebar()">&times;</button>
-    <a href="/profile">Profile</a>
-    <a href="/leaderboard">Leaderboard</a>
-    <a href="/about">About</a>
-    <a href="/contact">Contact</a>
-    <a href="/myLogs">Logs</a>
-    <a href="/tutorials">Tutorials</a>
-    <a href="/logout">Logout</a>
-  </div>
-
-  <section class="hero">
-    <h2>Chess Tutorials</h2>
-    <p>Master the game with step-by-step guides, strategies, and expert tips.</p>
-  </section>
-
-  <section class="tutorials container">
-    <h3>Popular Topics</h3>
-
-    <div class="tutorial-card">
-      <h4>♟️ Opening Principles</h4>
-      <p>Learn how to control the center, develop your pieces efficiently, and stay safe in the early game.</p>
-      <a href="https://www.chess.com/lessons/openings" target="_blank">Start Learning</a>
     </div>
 
-    <div class="tutorial-card">
-      <h4>♞ Tactics and Combinations</h4>
-      <p>Discover essential tactical patterns like forks, pins, skewers, and more to gain the upper hand.</p>
-      <a href="https://lichess.org/practice" target="_blank">Practice Tactics</a>
-    </div>
+    <section class="hero">
+        <h2>Chess Tutorials</h2>
+        <p>Master the game with step-by-step guides, strategies, and expert tips.</p>
+    </section>
 
-    <div class="tutorial-card">
-      <h4>♚ Endgame Basics</h4>
-      <p>Understand fundamental endgames like king and pawn vs. king, opposition, and checkmate patterns.</p>
-      <a href="https://www.chessable.com/course/100-endgames-you-must-know/20795/" target="_blank">View Course</a>
-    </div>
-  </section>
+    <section class="tutorials container">
+        <h3>Popular Topics</h3>
 
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("sidebar");
-      sidebar.style.right = sidebar.style.right === "0px" ? "-250px" : "0";
-    }
+        <div class="tutorial-card">
+            <h4>♟️ Opening Principles</h4>
+            <p>Learn how to control the center, develop your pieces efficiently, and stay safe in the early game.</p>
+            <a href="https://www.chess.com/lessons/openings" target="_blank">Start Learning</a>
+        </div>
 
-    window.addEventListener("resize", () => {
-      const nav = document.querySelector("nav");
-      const menuBtn = document.querySelector(".menu-btn");
-      const sidebar = document.getElementById("sidebar");
+        <div class="tutorial-card">
+            <h4>♞ Tactics and Combinations</h4>
+            <p>Discover essential tactical patterns like forks, pins, skewers, and more to gain the upper hand.</p>
+            <a href="https://lichess.org/practice" target="_blank">Practice Tactics</a>
+        </div>
 
-      if (window.innerWidth <= 768) {
-        nav.style.display = "none";
-        menuBtn.style.display = "block";
-        sidebar.style.right = "-250px";
-      } else {
-        nav.style.display = "flex";
-        menuBtn.style.display = "none";
-        sidebar.style.right = "-250px";
-      }
-    });
+        <div class="tutorial-card">
+            <h4>♚ Endgame Basics</h4>
+            <p>Understand fundamental endgames like king and pawn vs. king, opposition, and checkmate patterns.</p>
+            <a href="https://www.chessable.com/course/100-endgames-you-must-know/20795/" target="_blank">View Course</a>
+        </div>
+    </section>
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const nav = document.querySelector("nav");
-      const menuBtn = document.querySelector(".menu-btn");
-      const sidebar = document.getElementById("sidebar");
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.style.right = sidebar.style.right === "0px" ? "-250px" : "0";
+        }
 
-      if (window.innerWidth <= 768) {
-        nav.style.display = "none";
-        menuBtn.style.display = "block";
-        sidebar.style.right = "-250px";
-      } else {
-        nav.style.display = "flex";
-        menuBtn.style.display = "none";
-        sidebar.style.right = "-250px";
-      }
-    });
-  </script>
+        window.addEventListener("resize", () => {
+            const nav = document.querySelector("nav");
+            const menuBtn = document.querySelector(".menu-btn");
+            const sidebar = document.getElementById("sidebar");
+
+            if (window.innerWidth <= 768) {
+                nav.style.display = "none";
+                menuBtn.style.display = "block";
+                sidebar.style.right = "-250px";
+            } else {
+                nav.style.display = "flex";
+                menuBtn.style.display = "none";
+                sidebar.style.right = "-250px";
+            }
+        });
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const nav = document.querySelector("nav");
+            const menuBtn = document.querySelector(".menu-btn");
+            const sidebar = document.getElementById("sidebar");
+
+            if (window.innerWidth <= 768) {
+                nav.style.display = "none";
+                menuBtn.style.display = "block";
+                sidebar.style.right = "-250px";
+            } else {
+                nav.style.display = "flex";
+                menuBtn.style.display = "none";
+                sidebar.style.right = "-250px";
+            }
+        });
+    </script>
 </body>
+
 </html>

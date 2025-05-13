@@ -5,7 +5,7 @@ const db = require('../config/db');
 
 router.get('/', (req, res) => {
     const userId = req.session.userId;
-    if (!userId) return res.redirect('/signin');
+    if (!userId) return res.redirect('/SignUp_SignIn.html');
 
     db.query(
         'SELECT event_type, message, timestamp FROM user_logs WHERE user_id = ? ORDER BY timestamp DESC',
