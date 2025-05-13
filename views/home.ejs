@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,58 +14,70 @@
             background-color: #f5f5f5;
             color: #333;
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         header {
             background-color: #ddd;
             padding: 1rem 0;
         }
+
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
+
         header h1 {
             font-size: 1.8rem;
         }
+
         nav {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
         }
+
         nav a {
             color: #555;
             text-decoration: none;
             font-size: 1rem;
             transition: color 0.3s;
         }
+
         nav a:hover {
             color: #000;
         }
+
         .hero {
             text-align: center;
             padding: 4rem 1rem;
             background: linear-gradient(to right, #9ecae1, #c6dbef);
         }
+
         .hero h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
+
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
         }
+
         .hero .buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
         }
+
         .hero button {
             background-color: #4682b4;
             color: #fff;
@@ -75,22 +88,27 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .hero button:hover {
             background-color: #5a9bd4;
         }
+
         .about {
             text-align: center;
             padding: 2rem 1rem;
             background-color: #eee;
         }
+
         .about h3 {
             font-size: 2rem;
             margin-bottom: 1rem;
         }
+
         .about p {
             font-size: 1.2rem;
             color: #555;
         }
+
         .sidebar {
             position: fixed;
             right: -250px;
@@ -103,6 +121,7 @@
             transition: right 0.3s;
             justify-content: center;
         }
+
         .sidebar a {
             display: block;
             color: white;
@@ -110,9 +129,11 @@
             text-decoration: none;
             text-align: center;
         }
+
         .sidebar a:hover {
             background: #575757;
         }
+
         .sidebar .profile {
             display: flex;
             align-items: center;
@@ -121,6 +142,7 @@
             border-bottom: 1px solid #575757;
             justify-content: center;
         }
+
         .menu-btn {
             display: none;
             font-size: 1.5rem;
@@ -130,21 +152,28 @@
             cursor: pointer;
             padding: 10px;
         }
+
         .menu-btn .profile {
             display: none;
         }
+
         @media (max-width: 768px) {
             .menu-btn {
                 display: block;
                 position: fixed;
-                right: 10px; /* Position the button on the right side */
+                right: 10px;
+                /* Position the button on the right side */
                 top: 10px;
             }
+
             .sidebar {
-                right: -250px; /* Ensure sidebar is hidden initially on the right */
-                left: auto; /* Remove left positioning */
+                right: -250px;
+                /* Ensure sidebar is hidden initially on the right */
+                left: auto;
+                /* Remove left positioning */
             }
         }
+
         @media (min-width: 769px) {
             .menu-btn .profile {
                 display: flex;
@@ -164,6 +193,7 @@
                 color: #555;
             }
         }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -174,9 +204,11 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
+
         .close-btn:hover {
             color: #ffcc00;
         }
+
         .dropdown {
             position: relative;
             display: inline-block;
@@ -222,17 +254,18 @@
         }
 
         .profile-photo {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin: 3px;
-        background-image: url('/images/WhatsApp\ Image\ 2023-10-24\ .jpg');
-        background-size: cover;
-        align-items: center;
-    }
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 3px;
+            background-image: url('/images/WhatsApp\ Image\ 2023-10-24\ .jpg');
+            background-size: cover;
+            align-items: center;
+        }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container">
@@ -240,25 +273,28 @@
             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
             <nav>
                 <a href="/profile">Profile</a>
-                <a href="#">Leaderboard</a>
-                <a href="#">About</a>
-                <a href="#">Contact Us</a>
-                <a href="#">Logs</a>
+                <a href="/leaderboard">Leaderboard</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact Us</a>
+                <a href="/myLogs">Logs</a>
                 <a href="/logout">Logout</a>
             </nav>
         </div>
     </header>
     <div class="sidebar" id="sidebar">
         <div class="profile">
-            <img id="profilePhoto" src="<%= profilePhoto%>" alt="Profile Photo" class="profile-photo" onerror="this.src='/uploads/default-profile.jpg';">
-            <span class="username"><%= username%></span>
+            <img id="profilePhoto" src="<%= profilePhoto%>" alt="Profile Photo" class="profile-photo"
+                onerror="this.src='/uploads/default-profile.jpg';">
+            <span class="username">
+                <%= username%>
+            </span>
         </div>
         <button class="close-btn" onclick="toggleSidebar()">&times;</button>
         <a href="/profile">Profile</a>
-        <a href="#">Leaderboard</a>
-        <a href="#">About</a>
-        <a href="#">Contact</a>
-        <a href="#">Logs</a>
+        <a href="/leaderboard">Leaderboard</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+        <a href="/myLogs">Logs</a>
         <a href="/logout">Logout</a>
     </div>
     <section class="hero">
@@ -273,18 +309,32 @@
                         <a href="/againstAi">Play Against AI</a>
                     </div>
                 </div>
-                <button onclick="window.location.href='#'">Game Analysis</button>
+                <button onclick="window.location.href='/analysis'">Game Analysis</button>
+
+                <button onclick="window.location.href='/tutorial'">Tutorials</button>
             </div>
         </div>
     </section>
-    <section class="about">
+    <section class="about" style="text-align: center; padding: 3rem 1rem; background-color: #f0f4f8;">
         <div class="container">
-            <h3>About ChessMaster</h3>
-            <p>ChessMaster is the ultimate online chess platform where players can compete, improve, and climb the global rankings.</p>
-            <h1>Welcome to the home page</h1>
-            <p>User ID: <%= id %></p>
+            <h3 style="font-size: 2rem; margin-bottom: 1rem; color: #2a83ad;">Your Chess Journey Starts Here</h3>
+            <p style="font-size: 1.1rem; max-width: 700px; margin: 0 auto; color: #444;">
+                Welcome to <strong>ChessMaster</strong> — where strategy meets simplicity. Challenge yourself, play with
+                AI or real opponents, and improve every game.
+            </p>
+            <% if (id) { %>
+                <p style="margin-top: 1.2rem; font-size: 1rem; color: #555;">Logged in as: <strong>
+                        <%= id %>
+                    </strong></p>
+                <% } else { %>
+                    <p style="margin-top: 1.2rem; font-size: 1rem; color: #555;">You're currently playing as a guest. <a
+                            href="/signin" style="color: #2847ad; text-decoration: underline;">Sign in</a> to track your
+                        progress!</p>
+                    <% } %>
         </div>
     </section>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const sidebar = document.getElementById("sidebar");
@@ -334,4 +384,5 @@
         });
     </script>
 </body>
+
 </html>

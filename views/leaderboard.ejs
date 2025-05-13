@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #f0faff, #e6f7ff);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(66, 189, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 95%;
+            max-width: 1000px;
+            border: 1px solid rgba(66, 189, 255, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077b6;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        table th, table td {
+            padding: 14px;
+            border: 1px solid rgba(66, 189, 255, 0.2);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        table th {
+            background-color: rgba(66, 189, 255, 0.2);
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: rgba(66, 189, 255, 0.1);
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #0077b6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+
+        <% if (players.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Rating</th>
+                    <th>Games</th>
+                    <th>Wins</th>
+                    <th>Losses</th>
+                    <th>Draws</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% players.forEach((player, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= player.name %></td>
+                    <td><%= player.rating %></td>
+                    <td><%= player.total_games %></td>
+                    <td><%= player.won %></td>
+                    <td><%= player.lost %></td>
+                    <td><%= player.drawn %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <% } else { %>
+            <p>No leaderboard data available.</p>
+        <% } %>
+
+        <a href="/home">Back to Home</a>
+    </div>
+</body>
+</html>

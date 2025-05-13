@@ -1,0 +1,116 @@
+/* General Layout */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #f0faff, #e6f7ff);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 40px;
+}
+
+.container {
+    background-color: rgba(66, 189, 255, 0.15); /* Subtle blue tint */
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    width: 90%;
+    max-width: 900px;
+    border: 1px solid rgba(66, 189, 255, 0.4);
+}
+
+/* Headings */
+h1, h2 {
+    text-align: center;
+    color: #0077b6;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #003049;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(66, 189, 255, 0.4);
+    border-radius: 6px;
+    font-size: 15px;
+    resize: vertical;
+    background-color: #ffffff;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    background-color: #42bdff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #229edb;
+}
+
+/* Table Styling */
+.analysis-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border: 1px solid rgba(66, 189, 255, 0.4);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.analysis-table th,
+.analysis-table td {
+    border: 1px solid rgba(66, 189, 255, 0.2);
+    padding: 12px;
+    text-align: left;
+    word-break: break-word;
+}
+
+.analysis-table th {
+    background-color: rgba(66, 189, 255, 0.2);
+    color: #004d66;
+    font-weight: 600;
+}
+
+.analysis-table tbody tr:hover {
+    background-color: rgba(66, 189, 255, 0.1);
+}
+
+/* Error Message */
+.error-message {
+    background-color: #ffe5e5;
+    border-left: 4px solid #ff4d4d;
+    color: #b30000;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* Links */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #0077b6;
+    font-weight: 600;
+}
+a:hover {
+    text-decoration: underline;
+}

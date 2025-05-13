@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Activity Logs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eaf7ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(66, 189, 255, 0.2);
+      padding: 30px;
+      border: 2px solid rgba(66, 189, 255, 0.4);
+    }
+
+    h1 {
+      text-align: center;
+      color: #2b7dbf;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(66, 189, 255, 0.2);
+    }
+
+    th {
+      background-color: rgba(66, 189, 255, 0.1);
+      color: #045a8d;
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: rgba(66, 189, 255, 0.15);
+    }
+
+    .event-type {
+      font-weight: bold;
+      color: #0080c6;
+    }
+
+    .timestamp {
+      color: #555;
+      font-size: 0.9em;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      color: #045a8d;
+      border: 1px solid #45b6ff;
+      padding: 10px 20px;
+      border-radius: 4px;
+      background-color: rgba(66, 189, 255, 0.1);
+      transition: 0.3s ease;
+    }
+
+    .back-link:hover {
+      background-color: rgba(66, 189, 255, 0.3);
+    }
+
+    .no-logs {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Activity Logs</h1>
+
+    <% if (logs.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>Event Type</th>
+            <th>Message</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.forEach(log => { %>
+            <tr>
+              <td class="event-type"><%= log.event_type %></td>
+              <td><%= log.message %></td>
+              <td class="timestamp"><%= new Date(log.timestamp).toLocaleString() %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="no-logs">No activity logs available.</p>
+    <% } %>
+
+    <div style="text-align: center;">
+      <a class="back-link" href="/home">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>

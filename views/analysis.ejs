@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    <link rel="stylesheet" href="/public/css/analysis.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Results</h1>
+        <% if (locals.analysis && analysis.length > 0) { %>
+            <h2>Move Analysis</h2>
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>Move</th>
+                        <th>FEN</th>
+                        <th>Best Move</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% analysis.forEach(item => { %>
+                        <tr>
+                            <td><%= item.move %></td>
+                            <td><%= item.fen %></td>
+                            <td><%= item.bestMove %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <p>No analysis data available.</p>
+        <% } %>
+        <a href="/">Analyze Another Game</a>
+    </div>
+    <script src="/js/script.js"></script>
+</body>
+</html>

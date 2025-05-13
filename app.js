@@ -47,6 +47,21 @@ setupAgainstAi(io);
 
 setupSocket(io);
 
+const analysisRoutes = require('./routes/analysis');
+app.use('/analysis', analysisRoutes);
+
+const leaderboardRouter = require('./routes/leaderboard');
+app.use('/leaderboard', leaderboardRouter);
+
+const aboutRoutes = require('./routes/about');
+app.use('/about', aboutRoutes);
+
+const contactRoutes = require('./routes/contact');
+app.use('/contact', contactRoutes);
+
+const myLogsRouter = require('./routes/myLogs');
+app.use('/myLogs', myLogsRouter);
+
 const redisClient = redis.createClient();
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
 redisClient.connect();
@@ -92,7 +107,7 @@ function isValidPassword(password) {
     return passwordPattern.test(password);
 }
 
-  
+
 
 app.get('/send-otp', (req, res) => {
     const { email } = req.query;
@@ -168,7 +183,7 @@ app.post('/signup', async (req, res) => {
     console.log('Entered into signup route!');
     console.log('client data: ', req.body);
     const { name, email, password } = req.body;
-    if(!isValidPassword(password)) {
+    if (!isValidPassword(password)) {
         return res.status(400).send('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
     }
     try {
@@ -204,7 +219,17 @@ app.post('/signin', (req, res) => {
         if (isPasswordValid) {
             req.session.userId = user.id; // Store user ID in session
             console.log('Session userId set:', req.session.userId);
-            res.json({message: 'Login Successful'}); // Send user ID in the response
+
+            connection.query(
+                'INSERT INTO user_logs (user_id, event_type, message) VALUES (?, ?, ?)',
+                [req.session.userId, 'Login', 'User logged in'],
+                (err) => {
+                    if (err) console.error('Logging error:', err);
+                }
+            );
+
+
+            res.json({ message: 'Login Successful' }); // Send user ID in the response
         }
         else {
             res.json({ message: 'Incorrect password' });
@@ -217,10 +242,10 @@ app.get('/home', (req, res) => {
         return res.redirect('/SignUp_SignIn.html'); // or any login page
     }
 
-     // 🔒 Prevent caching
-     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-     res.setHeader('Pragma', 'no-cache');
-     res.setHeader('Expires', '0');
+    // 🔒 Prevent caching
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
 
     // res.render('home', { id: req.session.userId }); // ✅ safely render using session
 
@@ -238,6 +263,17 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
+    const userId = req.session.userId; // Save it before destroying session
+
+    // Log the logout event
+    connection.query(
+        'INSERT INTO user_logs (user_id, event_type, message) VALUES (?, ?, ?)',
+        [userId, 'Logout', 'User logged out'],
+        (err) => {
+            if (err) console.error('Logging error:', err);
+        }
+    );
+
     req.session.destroy(err => {
         if (err) {
             console.error('Error destroying session:', err);
@@ -245,9 +281,10 @@ app.get('/logout', (req, res) => {
         }
 
         res.clearCookie('connect.sid'); // remove session cookie
-        res.redirect('/SignUp_SignIn.html'); // or send JSON if frontend handles it
+        res.redirect('/SignUp_SignIn.html');
     });
 });
+
 
 
 app.post('/update-password', async (req, res) => {
@@ -266,9 +303,35 @@ app.post('/update-password', async (req, res) => {
     }
 });
 
+app.get('/tutorial', (req, res) => {
+  if (!req.session.userId) {
+        return res.redirect('/SignUp_SignIn.html'); // or any login page
+    }
+
+    // 🔒 Prevent caching
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    // res.render('home', { id: req.session.userId }); // ✅ safely render using session
+
+    connection.query('SELECT name, email, profile_photo FROM users WHERE id = ?', [req.session.userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching user data:', err);
+            return res.status(500).send('Failed to load profile.');
+        }
+
+        const user = results[0];
+        console.log('Username:', user?.name, 'Email:', user?.email);
+        const profilePhoto = user?.profile_photo || '/uploads/default-profile.jpg'; // Use default photo if none exists
+        res.render('tutorial', { id: req.session.userId, profilePhoto, username: user?.name, email: user?.email });
+    });
+});
+
+
 server.listen(3000, () => {
     console.log('Server running on port 3000');
 });
 
 
-module.exports = {connection, io}; // Export the connection and io for use in other modules
+module.exports = { connection, io }; // Export the connection and io for use in other modules
