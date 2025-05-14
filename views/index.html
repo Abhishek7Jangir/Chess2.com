@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,58 +14,70 @@
             background-color: #f5f5f5;
             color: #333;
         }
+
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         header {
             background-color: #ddd;
             padding: 1rem 0;
         }
+
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
+
         header h1 {
             font-size: 1.8rem;
         }
+
         nav {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
         }
+
         nav a {
             color: #555;
             text-decoration: none;
             font-size: 1rem;
             transition: color 0.3s;
         }
+
         nav a:hover {
             color: #000;
         }
+
         .hero {
             text-align: center;
             padding: 4rem 1rem;
             background: linear-gradient(to right, #9ecae1, #c6dbef);
         }
+
         .hero h2 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
         }
+
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 2rem;
         }
+
         .hero .buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
         }
+
         .hero button {
             background-color: #4682b4;
             color: #fff;
@@ -75,22 +88,27 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .hero button:hover {
             background-color: #5a9bd4;
         }
+
         .about {
             text-align: center;
             padding: 2rem 1rem;
             background-color: #eee;
         }
+
         .about h3 {
             font-size: 2rem;
             margin-bottom: 1rem;
         }
+
         .about p {
             font-size: 1.2rem;
             color: #555;
         }
+
         .sidebar {
             position: fixed;
             right: -250px;
@@ -102,6 +120,7 @@
             padding-top: 60px;
             transition: right 0.3s;
         }
+
         .sidebar a {
             display: block;
             color: white;
@@ -109,9 +128,11 @@
             text-decoration: none;
             text-align: center;
         }
+
         .sidebar a:hover {
             background: #575757;
         }
+
         .menu-btn {
             display: none;
             font-size: 1.5rem;
@@ -121,18 +142,24 @@
             cursor: pointer;
             padding: 10px;
         }
+
         @media (max-width: 768px) {
             .menu-btn {
                 display: block;
                 position: fixed;
-                right: 10px; /* Position the button on the right side */
+                right: 10px;
+                /* Position the button on the right side */
                 top: 10px;
             }
+
             .sidebar {
-                right: -250px; /* Ensure sidebar is hidden initially on the right */
-                left: auto; /* Remove left positioning */
+                right: -250px;
+                /* Ensure sidebar is hidden initially on the right */
+                left: auto;
+                /* Remove left positioning */
             }
         }
+
         .close-btn {
             position: absolute;
             top: 10px;
@@ -143,27 +170,28 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
+
         .close-btn:hover {
             color: #ffcc00;
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container">
             <h1>ChessMaster</h1>
             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
             <nav>
-                <a href="#">Home</a>
-                <a href="#">About</a>
-                <a href="#">Leaderboard</a>
-                <a href="#">Contact</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact Us</a>
             </nav>
         </div>
     </header>
     <div class="sidebar" id="sidebar">
         <button class="close-btn" onclick="toggleSidebar()">&times;</button>
         <a href="/about">About</a>
+        <a href="/contact">Contact Us</a>
     </div>
     <section class="hero">
         <div class="container">
@@ -179,7 +207,8 @@
     <section class="about">
         <div class="container">
             <h3>About ChessMaster</h3>
-            <p>ChessMaster is the ultimate online chess platform where players can compete, improve, and climb the global rankings.</p>
+            <p>ChessMaster is the ultimate online chess platform where players can compete, improve, and climb the
+                global rankings.</p>
         </div>
     </section>
     <script>
@@ -232,4 +261,5 @@
     </script>
     <script src="/public/js/script.js"></script>
 </body>
+
 </html>
