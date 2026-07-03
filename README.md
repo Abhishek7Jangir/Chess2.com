@@ -6,7 +6,7 @@ Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 
 ## Demo
 
-[Screen recording or GIF here — multiplayer match + AI game]
+[chessRecordingWeb.mp4]
 
 ## 📋 Features
 
