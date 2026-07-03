@@ -7,10 +7,6 @@ Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 ## Demo
 <video src="https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20" width="100%" controls></video>
 
-
-[[Watch the Demo Video](chessRecordingWeb.mp4)](https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20)
-
-
 ## 📋 Features
 
 **Real-Time Multiplayer**
