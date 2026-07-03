@@ -6,7 +6,7 @@ Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 
 ## Demo
 
-[Watch the Demo Video](chessRecordingWeb.mp4)
+[[Watch the Demo Video](chessRecordingWeb.mp4)](https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20)
 
 
 ## 📋 Features
