@@ -1,84 +1,100 @@
-# ♟️ ChessMaster Web Application – README
+# ♟️ ChessMaster — Full-Stack Real-Time Chess Platform
 
----
+ChessMaster is a full-stack web application for playing chess online — real-time multiplayer with matchmaking and ELO-style ratings, a play-against-AI mode powered by the Stockfish engine, and post-game analysis with move-by-move evaluation.
 
-## 🔹 Project Overview
+Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 
-**ChessMaster** is a full-stack web-based chess application that offers users a complete chess-playing experience. The platform supports multiple play modes including **human vs AI** and **multiplayer games**, along with **user account management**, **game analysis using PGN**, and a **personalized profile system**. The project emphasizes **simplicity, functionality, and future scalability**.
+## Demo
 
----
+[Screen recording or GIF here — multiplayer match + AI game]
 
-## 🔹 Release 1 Summary
+## 📋 Features
 
-### ✅ What Have We Done?
+**Real-Time Multiplayer**
+- Two-player matchmaking queue with automatic room creation
+- Live move sync and server-side move validation using `chess.js` — the server keeps its own authoritative game state, so a client can't send illegal or spoofed moves
+- ELO-style rating system: rating changes scale based on current rating tier (bigger swings for newer/lower-rated players)
 
-#### 🔐 User Authentication
-- Signup and Login pages with session-based management.
-- Email verification and basic password hashing.
+**Play Against AI**
+- Integrates the **Stockfish** chess engine as a subprocess, communicating over the UCI (Universal Chess Interface) protocol
+- Three difficulty levels (easy/medium/hard), mapped to Stockfish's skill level and search depth
+- Same server-side validation and rating system as multiplayer
 
-#### ♟️ Play Against AI
-- Player vs. AI chessboard using **Chess.js** and **Stockfish engine**.
-- Evaluation bar and board rendering for a real-time experience.
+**Game Analysis**
+- PGN upload with move-by-move evaluation via Stockfish
+- Visual comparison of best move vs. played move
 
-#### 🧑‍🤝‍🧑 Multiplayer Game
-- Real-time two-player chess via **WebSockets using Socket.IO**.
-- Matchmaking system and rating updates after each game.
+**Accounts & Security**
+- Signup/login with `bcrypt` password hashing and session-based auth (`express-session`)
+- Email OTP verification using Redis (short-lived, expiring keys) and Nodemailer
+- Role-separated profile system with photo upload
 
-#### 👤 Profile Page
-- Display of user information and uploaded profile photo.
+**Other**
+- Per-user activity logs (login, logout, game start)
+- Leaderboard ranked by wins
+- Chess tutorials page, responsive sidebar UI
 
-#### ℹ️ About Page
-- Static informative page about the application’s mission and features.
+## 🛠️ How It Works
 
-#### 📱 Responsive UI
-- Sidebar navigation and color themes consistent across devices.
+**Multiplayer sync**: When two players connect, they're matched from a waiting queue into a game room. Each room holds its own `chess.js` instance as the source of truth. Every move a client sends is validated server-side before being broadcast — this prevents cheating and keeps both players' boards in sync even on unreliable connections.
 
----
+**AI opponent**: On game start, the server spawns a Stockfish process and speaks UCI to it — sending the current board position (FEN notation) and a search depth, then parsing Stockfish's `bestmove` response back into a move. The process is killed on disconnect to avoid leaking resources.
 
-## 🔹 Release 2 Summary (Final)
+**OTP verification**: Generated OTPs are stored in Redis with a 5-minute expiry (`EX 300`) rather than the main database — this keeps short-lived verification codes out of persistent storage and lets them expire automatically.
 
-### ✅ What Has Been Added?
+## 📁 File Structure
 
-#### 📊 Game Analysis Feature
-- PGN upload page with move-by-move analysis using Stockfish.
-- Graphical display of move quality (best move vs. played move).
+* **`app.js`**: Main server entry point — sets up Express, sessions, Socket.IO, Redis, and all routes.
+* **`routes/multiPlayer.js`**: Matchmaking, real-time move sync, and rating updates for PvP games.
+* **`routes/againstAi.js`**: Stockfish subprocess management and AI game logic.
+* **`routes/analysis.js`**: PGN upload and move analysis.
+* **`config/db.js`**: MySQL connection setup (via environment variables).
+* **`views/`**: EJS templates for all pages.
+* **`public/`**: Static assets — CSS, client-side JS, chess piece images.
+* **`engines/`**: Stockfish binary (not included in repo — see Setup).
 
-#### 📜 Logging System
-- Per-user activity logs (login, logout, game start) in JSON format.
-- Professional log viewer page styled in EJS.
+## ⚙️ Setup & Installation
 
-#### 🎓 Chess Tutorials Page
-- Dedicated section for learning resources and chess basics.
+**Prerequisites**: Node.js, a running MySQL instance, a running Redis instance, and the Stockfish engine binary for your OS.
 
-#### 🏆 Leaderboard
-- Rankings based on total wins with dynamic display of top users.
+1. **Clone the repo and install dependencies:**
+    ```bash
+    npm install
+    ```
 
-#### 📩 Contact Us Page
-- Static form with message functionality (can be extended for backend).
+2. **Set up the Stockfish engine:**
+    Download the Stockfish binary for your OS from [stockfishchess.org](https://stockfishchess.org/download/) and place it in the `engines/` folder. Update the path in `routes/againstAi.js` if your binary has a different filename.
 
-#### 🔐 Security & Robustness Enhancements
-- Session handling improvements.
-- Error handling in PGN analysis and multiplayer stability fixes.
+3. **Create a `.env` file** in the project root with:
+    ```
+    DB_HOST=your_mysql_host
+    DB_USER=your_mysql_user
+    DB_PASS=your_mysql_password
+    DB_NAME=your_database_name
+    SESSION_SECRET=your_session_secret
+    USER_EMAIL=your_gmail_address
+    APP_PASSWORD=your_gmail_app_password
+    ```
 
----
+4. **Set up the MySQL database** with the required tables (`users`, `user_logs`, etc. — see `config/db.js` for connection details).
 
-## 🔹 Future Scope
+5. **Start Redis** locally or point to a hosted Redis instance.
 
-- 🧩 **Interactive Puzzle Mode**: Add a timed puzzle-solving feature to sharpen tactics.
-- 📱 **Mobile Version**: Develop an Android/iOS app version of ChessMaster.
-- 📖 **Opening Explorer**: Allow players to explore popular openings using PGN trees.
-- 💡 **Advanced Analysis with Hints**: Show suggestions during training games with the AI.
-- 🧑‍🤝‍🧑 **Community Forum**: Introduce a community space for players to post strategies, games, and challenges.
+6. **Run the app:**
+    ```bash
+    npm start
+    ```
+    The server runs on port 3000 by default.
 
----
+## 🔮 Future Scope
 
-## 🔹 References
+- Interactive puzzle mode (timed tactics training)
+- Opening explorer using PGN trees
+- Mobile app version
+- Community forum for strategy discussion
 
-1. [**Chess.js GitHub Repository**](https://github.com/jhlywa/chess.js) – JavaScript chess library used for move validation and PGN handling.  
-2. [**Express.js Documentation**](https://expressjs.com/) – Backend web framework used for building the server and middleware integration.  
-3. [**Stockfish Chess Engine**](https://stockfishchess.org/) – Open-source chess engine used for game analysis and AI move generation.  
-4. [**Node.js Official Website**](https://nodejs.org/) – Server-side JavaScript runtime used to build backend services.  
-5. [**EJS Templating**](https://ejs.co/) – Templating engine used for rendering dynamic HTML pages.  
-6. [**Socket.IO Documentation**](https://socket.io/) – Real-time bidirectional communication library used in multiplayer games.  
-7. [**MDN Web Docs**](https://developer.mozilla.org/) – Reference for HTML, CSS, and JavaScript language features.  
-8. [**MySQL Documentation**](https://dev.mysql.com/doc/) – Used for storing user data, match records, and other backend logic.  
+## References
+
+- [Chess.js](https://github.com/jhlywa/chess.js) — move validation and PGN handling
+- [Stockfish](https://stockfishchess.org/) — chess engine for AI and analysis
+- [Socket.IO](https://socket.io/) — real-time multiplayer communication
