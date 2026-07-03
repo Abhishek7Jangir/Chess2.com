@@ -6,7 +6,7 @@ Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 
 ## Demo
 
-<video src="chessRecordingWeb.mp4" width="100%" controls></video>
+[Watch the Demo Video](chessRecordingWeb.mp4)
 
 
 ## 📋 Features
