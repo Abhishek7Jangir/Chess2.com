@@ -6,7 +6,8 @@ Built with **Node.js, Express, Socket.IO, MySQL, and Redis**.
 
 ## Demo
 
-![]([PASTE_YOUR_GITHUB_ISSUE_LINK_HERE](https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20))
+![]([https://github.com](https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20))
+
 
 
 [[Watch the Demo Video](chessRecordingWeb.mp4)](https://github.com/user-attachments/assets/92334a68-a267-4bed-8989-0d0680094f20)
